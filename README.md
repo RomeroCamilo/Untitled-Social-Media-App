@@ -1,1 +1,3 @@
-# Untitled-Social-Media-App
+ Untitled-Social-Media-App
+
+Developers: Camilo Romero, 
