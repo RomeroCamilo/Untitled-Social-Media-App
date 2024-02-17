@@ -1,3 +1,3 @@
  Untitled-Social-Media-App
 
-Developers: Camilo Romero, 
+Developers: Camilo Romero,Cristian Yepez 
