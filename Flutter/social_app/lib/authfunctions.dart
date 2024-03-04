@@ -107,7 +107,7 @@ class AuthServices {
          body: jsonEncode(<String, String>{
            'user_id': userid,
            'username': username,
-           'display_Name': displayName,
+           'display_name': displayName,
            'email': email,
          }), // Convert the map to a JSON-encoded string
        );
