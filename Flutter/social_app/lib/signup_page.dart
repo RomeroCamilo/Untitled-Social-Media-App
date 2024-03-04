@@ -1,9 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
-import 'login_page.dart';
 import 'main.dart';
 import 'authfunctions.dart';
 
@@ -16,14 +15,9 @@ class SignupPage extends StatefulWidget {
 class SignupPageState extends State<SignupPage> {
   final _formkey = GlobalKey<FormState>();
   String email = '';
+  String username = '';
+  String displayName = '';
   String password = '';
-
-  void goToLogin(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +26,11 @@ class SignupPageState extends State<SignupPage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 25, 25, 25),
         centerTitle: true,
-        title: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MyHomePage(
-                    title: 'WELCOME',
-                  ),
-                ),
-              );
-            },
-            child: const Text(
-              'SIGN UP',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 30),
-            )),
+        title: const Text(
+          'APP NAME',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30),
+        ),
         // LOGOUT BUTTON TO REMOVE ONCE THE APP IS FINISHED (REPLACED WITH A LOGOUT BUTTON IN THE ACCOUNTS PAGE)
         actions: [
           IconButton(
@@ -68,6 +49,17 @@ class SignupPageState extends State<SignupPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+            const Column(
+              children: [
+                Text(
+                  'SIGN UP',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30),
+                )
+              ],
+            ),
             Container(
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(7.5)),
@@ -96,6 +88,34 @@ class SignupPageState extends State<SignupPage> {
                           },
                           onSaved: (value) {
                             email = value!;
+                          },
+                        ),
+                        TextFormField(
+                          style: const TextStyle(color: Colors.white),
+                          key: const ValueKey('username'),
+                          decoration: const InputDecoration(
+                              hintStyle: TextStyle(color: Colors.white),
+                              hintText: 'USERNAME'),
+                          // NEED TO ADD CHECK TO SEE IF USERNAME IS UNIQUE
+                          // validator: (value) {
+                          //   if (value!.isEmpty || !value.contains('@')) {
+                          //     return 'Please Enter A Valid Email';
+                          //   } else {
+                          //     return null;
+                          //   }
+                          // },
+                          onSaved: (value) {
+                            username = value!;
+                          },
+                        ),
+                        TextFormField(
+                          style: const TextStyle(color: Colors.white),
+                          key: const ValueKey('displayname'),
+                          decoration: const InputDecoration(
+                              hintStyle: TextStyle(color: Colors.white),
+                              hintText: 'DISPLAY NAME'),
+                          onSaved: (value) {
+                            displayName = value!;
                           },
                         ),
                         TextFormField(
@@ -129,7 +149,8 @@ class SignupPageState extends State<SignupPage> {
                               if (_formkey.currentState!.validate()) {
                                 _formkey.currentState!.save();
                               }
-                              AuthServices.signupUser(email, password, context);
+                              AuthServices.signupUser(email, username,
+                                  displayName, password, context);
                             },
                             child: const Text('SIGN UP')),
                       ],

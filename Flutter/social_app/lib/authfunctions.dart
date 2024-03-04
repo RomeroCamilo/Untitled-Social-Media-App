@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'login_page.dart';
+import 'main.dart';
 
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
@@ -19,7 +19,7 @@ class AuthServices {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if (gUser == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error')));
+          .showSnackBar(const SnackBar(content: Text('Error')));
     }
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
     final credential = GoogleAuthProvider.credential(
@@ -33,24 +33,25 @@ class AuthServices {
     String uid = userCredential.user!.uid;
 
     // Access the uid of the newly created user
-    String username = userCredential.user!.email!;
+    String gEmail = userCredential.user!.email!;
 
     // Step 3: Trigger Cloud Function to create user in the cloud
-    // await addUserCloud(uid, username);
+    // await addUserCloud(uid, gEmail);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
     // WITH SAME FUNCTIONALITY, MIGHT BE THE WAY TO RETRIEVE THE UID FOR DATABASE!!!
     if (userCredential.user != null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Log in Successful')));
+          .showSnackBar(const SnackBar(content: Text('Log in Successful')));
       return userCredential;
     }
     return userCredential;
   }
 
   /* Non-google sign up / login */
-  static signupUser(String email, String password, BuildContext context) async {
+  static signupUser(String email, String username, String displayName,
+      String password, BuildContext context) async {
     /* try to create user */
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -60,25 +61,26 @@ class AuthServices {
       String uid = userCredential.user!.uid;
 
       // Access the uid of the newly created user
-      String username = userCredential.user!.email!;
+      String fEmail = userCredential.user!.email!;
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      // await addUserCloud(uid, username);
+      // await addUserCloud(uid, fEmail, username, displayName);
 
-      await FirebaseAuth.instance.currentUser!.updateEmail(email);
+      await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
+          email); // Changed this function from updateEmail due to depreciation
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Registration Successful')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successful')));
       goToLogin(context);
     }
     /* if error occurred when getting user */
     on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Password Provided is too weak')));
+            const SnackBar(content: Text('Password Provided Is Too Weak')));
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Email Provided already Exists')));
+            const SnackBar(content: Text('Email Provided Already Exists')));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -86,7 +88,8 @@ class AuthServices {
     }
   }
 
-  // static Future<void> addUserCloud(String uid, String username) async {
+  // static Future<void> addUserCloud(
+  //     String uid, String email, String username, String displayName) async {
   //   try {
   //     final response = await http.post(
   //       /* cloud function link that handles adding login info to the database */
@@ -98,7 +101,9 @@ class AuthServices {
   //       /* parameters to pass to the post request and then used to insert into database. */
   //       body: jsonEncode(<String, String>{
   //         'uid': uid,
+  //         'email': email,
   //         'username': username,
+  //         'displayName': displayName,
   //       }), // Convert the map to a JSON-encoded string
   //     );
 
@@ -118,14 +123,14 @@ class AuthServices {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('You are Logged in')));
+          .showSnackBar(const SnackBar(content: Text('You Are Logged in')));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No user Found with this Email')));
+            const SnackBar(content: Text('No User Found With This Email')));
       } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Password did not match')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password Does Not Match')));
       }
     }
   }
