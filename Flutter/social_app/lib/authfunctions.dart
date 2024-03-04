@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart';
 
+
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
 void goToLogin(BuildContext context) {
@@ -15,6 +16,8 @@ void goToLogin(BuildContext context) {
 }
 
 class AuthServices {
+
+  /* function where we sign in / signup through gmail */
   signInGoogle(context) async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if (gUser == null) {
@@ -49,25 +52,26 @@ class AuthServices {
     return userCredential;
   }
 
-  /* Non-google sign up / login */
-  static signupUser(String email, String username, String displayName,
-      String password, BuildContext context) async {
+  /* Non-google sign up / login service */
+  static signupUser(String email, String username, String displayName, String password, BuildContext context) async {
+    
     /* try to create user */
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      // Access the uid of the newly created user
+      // Access the uid of the newly created user.
       String uid = userCredential.user!.uid;
 
-      // Access the uid of the newly created user
+      // Access the uid of the newly created user.
       String fEmail = userCredential.user!.email!;
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      // await addUserCloud(uid, fEmail, username, displayName);
+      await addUserCloud(uid, fEmail, username, displayName);
 
-      await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
-          email); // Changed this function from updateEmail due to depreciation
+      print("testing");
+
+      await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(email); // Changed this function from updateEmail due to depreciation
 
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration Successful')));
@@ -88,35 +92,36 @@ class AuthServices {
     }
   }
 
-  // static Future<void> addUserCloud(
-  //     String uid, String email, String username, String displayName) async {
-  //   try {
-  //     final response = await http.post(
-  //       /* cloud function link that handles adding login info to the database */
-  //       Uri.parse(
-  //           'https://us-central1-planar-beach-404723.cloudfunctions.net/function-2'),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       /* parameters to pass to the post request and then used to insert into database. */
-  //       body: jsonEncode(<String, String>{
-  //         'uid': uid,
-  //         'email': email,
-  //         'username': username,
-  //         'displayName': displayName,
-  //       }), // Convert the map to a JSON-encoded string
-  //     );
+  /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
+   static Future<void> addUserCloud(
+       String userid, String email, String username, String displayName) async {
+     try {
+       final response = await http.post(
+         Uri.parse(
+              /* cloud function link that handles adding login info to the database */
+             'https://us-central1-music-social-media-app-414401.cloudfunctions.net/userProfiles/helloHttp'),
+         headers: <String, String>{
+           'Content-Type': 'application/json; charset=UTF-8',
+         },
+         /* parameters to pass to the post request and then used to insert into database! */
+         body: jsonEncode(<String, String>{
+           'user_id': userid,
+           'username': username,
+           'display_Name': displayName,
+           'email': email,
+         }), // Convert the map to a JSON-encoded string
+       );
 
-  //     if (response.statusCode == 200) {
-  //       print('Response from Cloud Function: ${response.body}');
-  //     } else {
-  //       print(
-  //           'Failed to call Cloud Function. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error calling Cloud Function: $e');
-  //   }
-  // }
+       if (response.statusCode == 200) {
+         print('Response from Cloud Function: ${response.body}');
+       } else {
+         print(
+             'Failed to call Cloud Function. Status code: ${response.statusCode}');
+       }
+     } catch (e) {
+       print('Error calling Cloud Function: $e');
+     }
+   }
 
   static signinUser(String email, String password, BuildContext context) async {
     try {

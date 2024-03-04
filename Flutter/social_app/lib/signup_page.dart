@@ -149,6 +149,7 @@ class SignupPageState extends State<SignupPage> {
                               if (_formkey.currentState!.validate()) {
                                 _formkey.currentState!.save();
                               }
+                              /* signing the user up with the provided details. */
                               AuthServices.signupUser(email, username,
                                   displayName, password, context);
                             },
