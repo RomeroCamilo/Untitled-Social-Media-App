@@ -109,7 +109,7 @@ class AuthServices {
            'username': username,
            'display_name': displayName,
            'email': email,
-           'private_profile': is_private
+           'is_private': is_private
          }), // Convert the map to a JSON-encoded string
        );
 
