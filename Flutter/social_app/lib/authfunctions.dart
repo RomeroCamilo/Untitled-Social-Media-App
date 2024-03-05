@@ -66,10 +66,11 @@ class AuthServices {
       // Access the uid of the newly created user.
       String fEmail = userCredential.user!.email!;
 
-      // Step 3: Trigger Cloud Function to create user in the cloud
-      await addUserCloud(uid, fEmail, username, displayName);
+      /* account is initally public. 0 = public, 1 = private */
+      String is_private = "0";
 
-      print("testing");
+      // Step 3: Trigger Cloud Function to create user in the cloud
+      await addUserCloud(uid, fEmail, username, displayName, is_private);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(email); // Changed this function from updateEmail due to depreciation
 
@@ -93,8 +94,7 @@ class AuthServices {
   }
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
-   static Future<void> addUserCloud(
-       String userid, String email, String username, String displayName) async {
+   static Future<void> addUserCloud( String userid, String email, String username, String displayName, String is_private) async {
      try {
        final response = await http.post(
          Uri.parse(
@@ -109,6 +109,7 @@ class AuthServices {
            'username': username,
            'display_name': displayName,
            'email': email,
+           'private_profile': is_private
          }), // Convert the map to a JSON-encoded string
        );
 
