@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
-import 'main.dart';
 import 'authfunctions.dart';
 
 class SignupPage extends StatefulWidget {
@@ -97,13 +96,14 @@ class SignupPageState extends State<SignupPage> {
                               hintStyle: TextStyle(color: Colors.white),
                               hintText: 'USERNAME'),
                           // NEED TO ADD CHECK TO SEE IF USERNAME IS UNIQUE
-                          // validator: (value) {
-                          //   if (value!.isEmpty || !value.contains('@')) {
-                          //     return 'Please Enter A Valid Email';
-                          //   } else {
-                          //     return null;
-                          //   }
-                          // },
+
+                          validator: (value) {
+                            if (value!.isEmpty || value.contains(' ')) {
+                              return 'Please Enter Username Without Spaces';
+                            } else {
+                              return null;
+                            }
+                          },
                           onSaved: (value) {
                             username = value!;
                           },
@@ -148,10 +148,11 @@ class SignupPageState extends State<SignupPage> {
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
                                 _formkey.currentState!.save();
+                                /* signing the user up with the provided details. */
+                                // changed this snippet to be in the if statement March 3rd
+                                AuthServices.signupUser(email, username,
+                                    displayName, password, context);
                               }
-                              /* signing the user up with the provided details. */
-                              AuthServices.signupUser(email, username,
-                                  displayName, password, context);
                             },
                             child: const Text('SIGN UP')),
                       ],

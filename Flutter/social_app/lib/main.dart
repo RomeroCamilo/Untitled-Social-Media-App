@@ -143,8 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
                                 _formkey.currentState!.save();
+                                AuthServices.signinUser(
+                                    email, password, context);
                               }
-                              AuthServices.signinUser(email, password, context);
                             },
                             child: const Text('LOGIN')),
                       ],
