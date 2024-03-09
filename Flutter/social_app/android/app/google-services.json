@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:585667916644:android:edd546070affc6d1dc0071",
+        "mobilesdk_app_id": "1:585667916644:android:084ee8eece64390ddc0071",
         "android_client_info": {
           "package_name": "com.example.social_app"
         }
@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "585667916644-fljj1ot4s0g46er4v36ffnajf4ttv9mp.apps.googleusercontent.com",
+              "client_id": "585667916644-djf16ljnglb7s6q2v4dkfokkia5apl69.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.socialApp.RunnerTests"
+                "bundle_id": "com.example.socialApp"
               }
             }
           ]

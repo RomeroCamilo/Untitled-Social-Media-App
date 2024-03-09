@@ -8,6 +8,7 @@ import 'package:sign_in_button/sign_in_button.dart';
 import 'firebase_options.dart';
 import 'authfunctions.dart';
 import 'signup_page.dart';
+import 'profile_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,15 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SignupPage()),
+    );
+  }
+
+  void goToProfile(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProfilePage(),
+      ),
     );
   }
 
@@ -160,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async => {
                   await AuthServices().signInGoogle(
                       context), //added an await here so that the redirect doesn't happen b4 the user is signed in
+                  goToProfile(context)
                 },
               ),
             ]),

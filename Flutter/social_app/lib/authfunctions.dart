@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart';
+import 'profile_page.dart';
 
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
@@ -11,6 +12,15 @@ void goToLogin(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const LoginPage()),
+  );
+}
+
+void goToProfile(BuildContext context) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ProfilePage(),
+    ),
   );
 }
 
@@ -138,6 +148,7 @@ class AuthServices {
           .signInWithEmailAndPassword(email: email, password: password);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('You Are Logged in')));
+      goToProfile(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
