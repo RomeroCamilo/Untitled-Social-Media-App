@@ -14,10 +14,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -51,5 +48,13 @@ class DefaultFirebaseOptions {
     iosClientId:
         '585667916644-fljj1ot4s0g46er4v36ffnajf4ttv9mp.apps.googleusercontent.com',
     iosBundleId: 'com.example.socialApp.RunnerTests',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBSZ4-75gJLuRPp67aef1rey_0wjIPZuUA',
+    appId: '1:585667916644:android:084ee8eece64390ddc0071',
+    messagingSenderId: '585667916644',
+    projectId: 'music-social-media-app-c6815',
+    storageBucket: 'music-social-media-app-c6815.appspot.com',
   );
 }
