@@ -1,38 +1,42 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-//import 'taskclass.dart';
 
 class DatabaseServices{
 
   //url to our cloud function instance.
   static const String baseUrl = 'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
 
-  // Function to add a new task
-  static Future<void> addUser(String email, String username, String displayName, String password) async {
+  /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
+  static Future<void> addUserCloud(String userid, String email, String username, String displayName, String isPrivate) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/User-Profile/tasksApi'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          //'Task_ID': task.taskId,
-          //'Task_Name': task.taskName,
-          //'Task_Info': task.taskInfo,
-          //'Completed': task.completed,
-          //'Unique_User_ID': task.uid,
-        }),
+        Uri.parse(
+            /* cloud function link that handles adding login info to the database */
+            '$baseUrl/userProfiles/helloHttp'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        /* parameters to pass to the post request and then used to insert into database! */
+        body: jsonEncode(<String, String>{
+          'user_id': userid,
+          'username': username,
+          'display_name': displayName,
+          'email': email,
+          'is_private': isPrivate
+        }), // Convert the map to a JSON-encoded string
       );
-      print('Response: ${response.statusCode}');
-      if (response.statusCode == 201) {
-        // Use the correct status code
-        print('Task added successfully');
+
+      if (response.statusCode == 200) {
+        print('Response from Cloud Function: ${response.body}');
       } else {
-        print('Failed to add task. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        throw Exception('Failed to add task');
+        print(
+            'Failed to call Cloud Function. Status code: ${response.statusCode}');
       }
-    } catch (error) {
-      print('Error adding task: $error');
+    } catch (e) {
+      print('Error calling Cloud Function: $e');
     }
   }
+
+
 }

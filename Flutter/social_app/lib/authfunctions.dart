@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart';
 import 'profile_page.dart';
+import 'database_services.dart';
 
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
@@ -54,7 +55,7 @@ class AuthServices {
     String isPrivate = "0";
 
     // Step 3: Trigger Cloud Function to create user in the cloud
-    // await addUserCloud(uid, gEmail, username, displayName, isPrivate);
+     //await DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -85,7 +86,7 @@ class AuthServices {
       String isPrivate = "0";
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      // await addUserCloud(uid, fEmail, username, displayName, isPrivate);
+      //await DatabaseServices.addUserCloud(uid, fEmail, username, displayName, isPrivate);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation
@@ -110,37 +111,6 @@ class AuthServices {
     }
   }
 
-  /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
-  static Future<void> addUserCloud(String userid, String email, String username,
-      String displayName, String isPrivate) async {
-    try {
-      final response = await http.post(
-        Uri.parse(
-            /* cloud function link that handles adding login info to the database */
-            'https://us-central1-music-social-media-app-414401.cloudfunctions.net/userProfiles/helloHttp'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        /* parameters to pass to the post request and then used to insert into database! */
-        body: jsonEncode(<String, String>{
-          'user_id': userid,
-          'username': username,
-          'display_name': displayName,
-          'email': email,
-          'is_private': isPrivate
-        }), // Convert the map to a JSON-encoded string
-      );
-
-      if (response.statusCode == 200) {
-        print('Response from Cloud Function: ${response.body}');
-      } else {
-        print(
-            'Failed to call Cloud Function. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error calling Cloud Function: $e');
-    }
-  }
 
   static signinUser(String email, String password, BuildContext context) async {
     try {
