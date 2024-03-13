@@ -29,13 +29,52 @@ class DatabaseServices{
       if (response.statusCode == 200) {
         print('Response from Cloud Function: ${response.body}');
       } else {
-        print(
-            'Failed to call Cloud Function. Status code: ${response.statusCode}');
+        print('Failed to call Cloud Function. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error calling Cloud Function: $e');
     }
   }
+
+  /* cloud function to retrieve user data */
+  /* 
+    sample usage:
+    var user_id = '123abc';
+    var result = await getUserCloud(String user_id);
+    var username = result['username'];
+  */
+  static Future<void> getUserCloud(String user_id) async {
+
+    try {
+      /* link with a unique user_id */
+      var uri = Uri.http(baseUrl, '/userProfiles/helloHttp', {'user_id': user_id});
+      final response = await http.get(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      /* return the values */
+      if (response.statusCode == 200) {
+        print('Response from Cloud Function: ${response.body}');
+        // Decode the JSON response and return it
+        return json.decode(response.body);
+      } 
+      else{
+        print('Failed to call Cloud Function. Status code: ${response.statusCode}');
+      }
+    } 
+    catch (e){
+      print('Error calling Cloud Function: $e');
+    }
+}
+
+    
+  
+  
+
+
 
 
 }
