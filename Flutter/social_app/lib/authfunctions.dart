@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:social_app/body_view.dart';
 import 'dart:convert';
 import 'main.dart';
 import 'profile_page.dart';
@@ -20,7 +21,7 @@ void goToProfile(BuildContext context) {
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
-      builder: (context) => const ProfilePage(),
+      builder: (context) => const HomePage(),
     ),
   );
 }
@@ -55,7 +56,7 @@ class AuthServices {
     String isPrivate = "0";
 
     // Step 3: Trigger Cloud Function to create user in the cloud
-     //await DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate);
+    //await DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -86,7 +87,8 @@ class AuthServices {
       String isPrivate = "0";
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      await DatabaseServices.addUserCloud(uid, fEmail, username, displayName, isPrivate);
+      await DatabaseServices.addUserCloud(
+          uid, fEmail, username, displayName, isPrivate);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation
@@ -110,7 +112,6 @@ class AuthServices {
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
-
 
   static signinUser(String email, String password, BuildContext context) async {
     try {

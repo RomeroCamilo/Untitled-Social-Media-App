@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:social_app/body_view.dart';
 import 'firebase_options.dart';
 import 'authfunctions.dart';
 import 'signup_page.dart';
@@ -170,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async => {
                   await AuthServices().signInGoogle(
                       context), //added an await here so that the redirect doesn't happen b4 the user is signed in
-                  goToProfile(context)
+                  const HomePage()
                 },
               ),
             ]),
