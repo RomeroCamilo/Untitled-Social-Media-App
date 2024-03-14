@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_app/authfunctions.dart';
 import 'package:social_app/edit_profile_page.dart';
 import 'database_services.dart';
+import 'user_class.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,6 +14,48 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+
+
+  User_Info? user_info;  // This will store the fetched user data
+  late String user_id;
+
+  String name = "init";
+
+  /* init with getting our current user_id */
+  @override
+  void initState() {
+    super.initState();
+    _getUserId();
+  }
+
+  // Retrieve the signed-in user's userId
+  void _getUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        user_id = user.uid;
+        _fetchTasks();
+      });
+    }
+  }
+
+  // Fetch user info for the current user
+  void _fetchTasks() async {
+    try {
+      User_Info userData = await DatabaseServices.getUserCloud(user_id);
+      setState(() {
+        user_info = userData; // Store the fetched data in user_info
+        name = "called";
+      });
+    } catch (e) {
+      print('Failed to fetch user info: $e');
+      setState(() {
+        name = "could not fetch."; // Ensure setState is called to update the UI
+      });
+    }
+  }
+
+
   void goToEditProfile(BuildContext context) {
     Navigator.push(
       context,
@@ -66,7 +110,9 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     Text(
-                      "Jason Liang",
+                       //"jason liang",
+                       user_info?.display_name ?? name,
+                      //user_data[0].display_name,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -92,7 +138,7 @@ class ProfilePageState extends State<ProfilePage> {
 
                 // USERNAME SECTION
                 Text(
-                  "@json_a9",
+                  user_info?.username ?? name,
                   style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
 

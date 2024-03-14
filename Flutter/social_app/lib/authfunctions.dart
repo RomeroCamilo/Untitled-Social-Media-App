@@ -86,7 +86,7 @@ class AuthServices {
       String isPrivate = "0";
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      //await DatabaseServices.addUserCloud(uid, fEmail, username, displayName, isPrivate);
+      await DatabaseServices.addUserCloud(uid, fEmail, username, displayName, isPrivate);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation
