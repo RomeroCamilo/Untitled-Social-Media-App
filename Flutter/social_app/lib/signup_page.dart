@@ -28,7 +28,7 @@ class SignupPageState extends State<SignupPage> {
         title: const Text(
           'APP NAME',
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30),
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 24),
         ),
         // LOGOUT BUTTON TO REMOVE ONCE THE APP IS FINISHED (REPLACED WITH A LOGOUT BUTTON IN THE ACCOUNTS PAGE)
         actions: [

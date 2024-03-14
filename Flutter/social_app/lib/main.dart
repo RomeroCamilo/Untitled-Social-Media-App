@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Music Social Media App',
       theme: ThemeData(
-          textTheme: GoogleFonts.bebasNeueTextTheme(),
+          textTheme: GoogleFonts.josefinSansTextTheme(),
           scaffoldBackgroundColor: const Color.fromARGB(255, 25, 25, 25)),
       home: const LoginPage(),
     );
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
         title: const Text(
           'APP NAME',
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30),
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 24),
         ),
         // LOGOUT BUTTON TO REMOVE ONCE THE APP IS FINISHED (REPLACED WITH A LOGOUT BUTTON IN THE ACCOUNTS PAGE)
         actions: [
