@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:social_app/fifthpage.dart';
-import 'package:social_app/fourthpage.dart';
-import 'package:social_app/secondpage.dart';
-import 'package:social_app/thirdpage.dart';
-import 'profile_page.dart';
+import 'package:social_app/pages/home_page.dart';
+import 'package:social_app/pages/fourthpage.dart';
+import 'package:social_app/pages/secondpage.dart';
+import 'package:social_app/pages/thirdpage.dart';
+import '../pages/profile_page.dart';
 import 'nav_bar.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class NavBarPage extends StatefulWidget {
+  const NavBarPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePage();
+  State<NavBarPage> createState() => _NavBarPage();
 }
 
-class _HomePage extends State<HomePage> {
+class _NavBarPage extends State<NavBarPage> {
   int currentPageIndex = 0;
   final screens = [
-    const ProfilePage(),
+    const HomeRoute(),
     const SecondRoute(),
     const ThirdRoute(),
     const FourthRoute(),
-    const FifthRoute(),
+    const ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

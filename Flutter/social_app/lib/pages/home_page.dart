@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:social_app/pages/profile_page.dart';
 
-import 'package:social_app/profile_page.dart';
-
-class FifthRoute extends StatelessWidget {
-  const FifthRoute({Key? key}) : super(key: key);
+class HomeRoute extends StatelessWidget {
+  const HomeRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class FifthRoute extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
-            child: const Text('home'),
+            child: const Text('homme'),
           ),
         ),
       ),

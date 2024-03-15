@@ -1,14 +1,15 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'user_class.dart';
+import 'dart:convert';
+import 'user_info.dart';
 
-class DatabaseServices{
-
+class DatabaseServices {
   //url to our cloud function instance.
-  static const String baseUrl = 'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
+  static const String baseUrl =
+      'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
-  static Future<void> addUserCloud(String userid, String email, String username, String displayName, String isPrivate) async {
+  static Future<void> addUserCloud(String userid, String email, String username,
+      String displayName, String isPrivate) async {
     try {
       final response = await http.post(
         Uri.parse(
@@ -30,7 +31,8 @@ class DatabaseServices{
       if (response.statusCode == 200) {
         print('Response from Cloud Function: ${response.body}');
       } else {
-        print('Failed to call Cloud Function. Status code: ${response.statusCode}');
+        print(
+            'Failed to call Cloud Function. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error calling Cloud Function: $e');
@@ -39,13 +41,12 @@ class DatabaseServices{
 
   /* cloud function to retrieve user data */
   static Future<User_Info> getUserCloud(String user_id) async {
-
     /* call our http endpoint */
     try {
       /* link with a unique user_id */
       final response = await http.get(
-         Uri.parse('$baseUrl/userProfiles/helloHttp?user_id=$user_id'),
-         headers: {'Content-Type': 'application/json'});
+          Uri.parse('$baseUrl/userProfiles/helloHttp?user_id=$user_id'),
+          headers: {'Content-Type': 'application/json'});
 
       /* return the values */
       /*
@@ -66,10 +67,9 @@ class DatabaseServices{
           email: userMap['email'] ?? '',
           profile_picture_path: userMap['profile_picture_path'] ?? '',
           biography: userMap['biography'] ?? '',
-          is_private: userMap['is_private'] ?? false, // Assuming is_private is a boolean
+          is_private: userMap['is_private'] ?? false,
         );
-      }
-      else {
+      } else {
         print('Failed to fetch user. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         throw Exception('Failed to fetch user');
@@ -79,6 +79,4 @@ class DatabaseServices{
       rethrow;
     }
   }
-
-  
 }

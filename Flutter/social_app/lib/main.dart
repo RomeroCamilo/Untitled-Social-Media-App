@@ -5,11 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
-import 'package:social_app/body_view.dart';
-import 'firebase_options.dart';
-import 'authfunctions.dart';
-import 'signup_page.dart';
-import 'profile_page.dart';
+import 'package:social_app/functions/go_to.dart';
+import 'firebase/firebase_options.dart';
+import 'firebase/authfunctions.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,22 +41,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
   String email = '';
   String password = '';
-
-  void goToSignup(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignupPage()),
-    );
-  }
-
-  void goToProfile(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfilePage(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +153,8 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async => {
                   await AuthServices().signInGoogle(
                       context), //added an await here so that the redirect doesn't happen b4 the user is signed in
-                  const HomePage()
+                  // const HomePage(),
+                  goToNavBarPage(context)
                 },
               ),
             ]),

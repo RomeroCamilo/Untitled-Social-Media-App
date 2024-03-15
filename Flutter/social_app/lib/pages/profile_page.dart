@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:social_app/authfunctions.dart';
-import 'package:social_app/edit_profile_page.dart';
-import 'database_services.dart';
-import 'user_class.dart';
-
+import 'package:social_app/functions/go_to.dart';
+import '../database/database_services.dart';
+import '../database/user_info.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,9 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-
-
-  User_Info? user_info;  // This will store the fetched user data
+  User_Info? user_info; // This will store the fetched user data
   late String user_id;
 
   String name = "init";
@@ -53,14 +49,6 @@ class ProfilePageState extends State<ProfilePage> {
         name = "could not fetch."; // Ensure setState is called to update the UI
       });
     }
-  }
-
-
-  void goToEditProfile(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const EditProfilePage()),
-    );
   }
 
   @override
@@ -110,8 +98,8 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     Text(
-                       //"jason liang",
-                       user_info?.display_name ?? name,
+                      //"jason liang",
+                      user_info?.display_name ?? name,
                       //user_data[0].display_name,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,

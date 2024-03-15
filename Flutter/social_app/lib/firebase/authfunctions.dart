@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'package:social_app/body_view.dart';
-import 'dart:convert';
-import 'main.dart';
-import 'profile_page.dart';
-import 'database_services.dart';
+import '../database/database_services.dart';
+import '../functions/go_to.dart';
 
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
-void goToLogin(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const LoginPage()),
-  );
-}
-
-void goToProfile(BuildContext context) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const HomePage(),
-    ),
-  );
-}
 
 class AuthServices {
-  /* function where we sign in / signup through gmail */
+  // Regular Email & PW Sign In
+  static signinUser(String email, String password, BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('You Are Logged in')));
+      goToNavBarPage(context);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No User Found With This Email')));
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password Does Not Match')));
+      }
+    }
+  }
+
+  // Gmail Sign In/Sign Up
   signInGoogle(context) async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if (gUser == null) {
@@ -56,7 +56,8 @@ class AuthServices {
     String isPrivate = "0";
 
     // Step 3: Trigger Cloud Function to create user in the cloud
-    //await DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate);
+    await DatabaseServices.addUserCloud(
+        uid, gEmail, username, displayName, isPrivate);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -69,7 +70,7 @@ class AuthServices {
     return userCredential;
   }
 
-  /* Non-google sign up / login service */
+  // Regular Email/PW Signup
   static signupUser(String email, String username, String displayName,
       String password, BuildContext context) async {
     /* try to create user */
@@ -110,24 +111,6 @@ class AuthServices {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
-
-  static signinUser(String email, String password, BuildContext context) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('You Are Logged in')));
-      goToProfile(context);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No User Found With This Email')));
-      } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password Does Not Match')));
-      }
     }
   }
 }
