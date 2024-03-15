@@ -17,3 +17,4 @@ class User_Info {
       required this.biography,
       required this.is_private});
 }
+

@@ -39,6 +39,8 @@ class DatabaseServices {
     }
   }
 
+
+
   /* cloud function to retrieve user data */
   static Future<User_Info> getUserCloud(String user_id) async {
     /* call our http endpoint */
@@ -79,4 +81,9 @@ class DatabaseServices {
       rethrow;
     }
   }
+
+
+
+
+  
 }
