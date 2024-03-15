@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:social_app/pages/profile_page.dart';
 
-class FourthRoute extends StatelessWidget {
-  const FourthRoute({Key? key}) : super(key: key);
+class NewPostPage extends StatelessWidget {
+  const NewPostPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('4th page')),
+        title: const Center(child: Text('3rd page')),
         backgroundColor: const Color.fromARGB(170, 0, 99, 224),
         actions: <Widget>[
           IconButton(

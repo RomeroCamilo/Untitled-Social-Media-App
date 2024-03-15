@@ -168,6 +168,7 @@ class SignupPageState extends State<SignupPage> {
                 onPressed: () async => {
                   await AuthServices().signInGoogle(
                       context), //added an await here so that the redirect doesn't happen b4 the user is signed in
+                  goToNavBarPage(context)
                 },
               ),
             ]),

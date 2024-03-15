@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:social_app/pages/profile_page.dart';
 
-class ThirdRoute extends StatelessWidget {
-  const ThirdRoute({Key? key}) : super(key: key);
+class NotificationPage extends StatelessWidget {
+  const NotificationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('3rd page')),
+        title: const Center(child: Text('4th page')),
         backgroundColor: const Color.fromARGB(170, 0, 99, 224),
         actions: <Widget>[
           IconButton(
