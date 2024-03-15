@@ -92,6 +92,7 @@ class DatabaseServices {
         return Relationship(
           following_count: userMap['following_count'] ?? '',
           followed_count: userMap['followed_count'] ?? '',
+          post_count: userMap['post_count'] ?? '',
           
         );
       } else {

@@ -14,7 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
-  Relationship? user_count; // This will store the fetched user data
+  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
   late String user_id;
 
   String name = "";
@@ -59,7 +59,7 @@ class ProfilePageState extends State<ProfilePage> {
     try {
       Relationship userFollowerData = await DatabaseServices.getUserCount(user_id);
       setState(() {
-        user_count = userFollowerData; // Store the fetched data in user_info
+        user_stats = userFollowerData; // Store the fetched data in user_info
         //name = "called";
       });
     } catch (e) {
@@ -150,7 +150,7 @@ class ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
 
-                // POSTS, FOLLOWERS, FOLLOWING COUNT SECTION
+                // POSTS, FOLLOWERS, FOLLOWING COUNT STATISTICS SECTION 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -158,7 +158,7 @@ class ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text(
                           //"134",
-                          user_count?.followed_count.toString() ?? name,
+                          user_stats?.followed_count.toString() ?? name,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
@@ -170,7 +170,8 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          "14",
+                          //"14",
+                          user_stats?.post_count.toString() ?? name,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
@@ -183,7 +184,7 @@ class ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text(
                           //"3213",
-                          user_count?.following_count.toString() ?? name,
+                          user_stats?.following_count.toString() ?? name,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
