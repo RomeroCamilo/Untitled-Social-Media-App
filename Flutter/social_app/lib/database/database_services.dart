@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_info.dart';
+import 'relationship.dart';
 
 class DatabaseServices {
   //url to our cloud function instance.
-  static const String baseUrl =
-      'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
+  static const String baseUrl = 'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
+
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
   static Future<void> addUserCloud(String userid, String email, String username,
@@ -50,14 +51,6 @@ class DatabaseServices {
           Uri.parse('$baseUrl/userProfiles/helloHttp?user_id=$user_id'),
           headers: {'Content-Type': 'application/json'});
 
-      /* return the values */
-      /*
-      if (response.statusCode == 200) {
-        print('Response from Cloud Function: ${response.body}');
-        // Decode the JSON response and return it
-        return json.decode(response.body);
-      } 
-      */
       if (response.statusCode == 200) {
         print('Response from Cloud Function: ${response.body}');
         // Decode the JSON response into a User_Info object
@@ -83,7 +76,37 @@ class DatabaseServices {
   }
 
 
+  /* cloud function to retrieve user follower and following count */
+  static Future<Relationship> getUserCount(String user_id) async {
+    /* call our http endpoint */
+    try {
+      /* link with a unique user_id */
+      final response = await http.get(
+          Uri.parse('$baseUrl/userRelationship/helloHttp?user_id=$user_id'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        print('Response from Cloud Function: ${response.body}');
+        // Decode the JSON response into a User_Info object
+        final Map<String, dynamic> userMap = json.decode(response.body);
+        return Relationship(
+          following_count: userMap['following_count'] ?? '',
+          followed_count: userMap['followed_count'] ?? '',
+          
+        );
+      } else {
+        print('Failed to fetch user. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to fetch user');
+      }
+    } catch (error) {
+      print('Error fetching user info: $error');
+      rethrow;
+    }
+  }
 
 
-  
+
+
+
 }

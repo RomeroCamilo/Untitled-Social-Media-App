@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_app/functions/go_to.dart';
 import '../database/database_services.dart';
 import '../database/user_info.dart';
+import '../database/relationship.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
+  Relationship? user_count; // This will store the fetched user data
   late String user_id;
 
   String name = "";
@@ -30,13 +32,14 @@ class ProfilePageState extends State<ProfilePage> {
     if (user != null) {
       setState(() {
         user_id = user.uid;
-        _fetchTasks();
+        _fetchUser();
+        _fetchCount();
       });
     }
   }
 
   // Fetch user info for the current user
-  void _fetchTasks() async {
+  void _fetchUser() async {
     try {
       User_Info userData = await DatabaseServices.getUserCloud(user_id);
       setState(() {
@@ -50,6 +53,23 @@ class ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
+  // Fetch user follower count for the current user
+  void _fetchCount() async {
+    try {
+      Relationship userFollowerData = await DatabaseServices.getUserCount(user_id);
+      setState(() {
+        user_count = userFollowerData; // Store the fetched data in user_info
+        //name = "called";
+      });
+    } catch (e) {
+      print('Failed to fetch user info: $e');
+      setState(() {
+        //name = "could not fetch."; // Ensure setState is called to update the UI
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +157,8 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          "134",
+                          //"134",
+                          user_count?.followed_count.toString() ?? name,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
@@ -161,7 +182,8 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          "3213",
+                          //"3213",
+                          user_count?.following_count.toString() ?? name,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
