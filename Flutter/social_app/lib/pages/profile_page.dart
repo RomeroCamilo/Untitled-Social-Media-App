@@ -15,7 +15,7 @@ class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
   late String user_id;
 
-  String name = "init";
+  String name = "";
 
   /* init with getting our current user_id */
   @override
@@ -41,12 +41,12 @@ class ProfilePageState extends State<ProfilePage> {
       User_Info userData = await DatabaseServices.getUserCloud(user_id);
       setState(() {
         user_info = userData; // Store the fetched data in user_info
-        name = "called";
+        //name = "called";
       });
     } catch (e) {
       print('Failed to fetch user info: $e');
       setState(() {
-        name = "could not fetch."; // Ensure setState is called to update the UI
+        //name = "could not fetch."; // Ensure setState is called to update the UI
       });
     }
   }
@@ -179,7 +179,8 @@ class ProfilePageState extends State<ProfilePage> {
                   children: [
                     Flexible(
                         child: Text(
-                      "he/him\nNYC\n22",
+                          user_info?.biography ?? name,
+                      //"he/him\nNYC\n22",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ))
                   ],
