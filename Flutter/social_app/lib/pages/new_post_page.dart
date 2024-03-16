@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_app/navbar/body_view.dart';
 import 'package:social_app/pages/profile_page.dart';
 
 class NewPostPage extends StatelessWidget {
@@ -26,7 +27,7 @@ class NewPostPage extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
+                  MaterialPageRoute(builder: (context) => const NavBarPage()));
             },
             child: const Text('home'),
           ),

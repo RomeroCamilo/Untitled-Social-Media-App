@@ -1,9 +1,44 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'
+    show kDebugMode; // Import kDebugMode from foundation.dart
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
   @override
   EditProfilePageState createState() => EditProfilePageState();
+}
+
+class SwitchExample extends StatefulWidget {
+  const SwitchExample({super.key});
+
+  @override
+  State<SwitchExample> createState() => _SwitchExampleState();
+}
+
+class _SwitchExampleState extends State<SwitchExample> {
+  String is_private = '0'; // Declare is_private variable to track switch state
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value:
+          is_private == '1', // Convert is_private to boolean for Switch widget
+      activeColor: const Color.fromARGB(255, 120, 2, 2),
+      onChanged: (bool value) {
+        setState(() {
+          is_private =
+              value ? '1' : '0'; // Update is_private with the new switch state
+        });
+
+        if (kDebugMode) {
+          // Use a logging framework (e.g., logger package) instead of print for production code
+          debugPrint('Switch value changed: $is_private, this is a string');
+        }
+      },
+    );
+  }
 }
 
 class EditProfilePageState extends State<EditProfilePage> {
@@ -57,7 +92,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             ),
 
             //This helps off center the profile picture to both be partially in the box & out of it
-            Align(
+            const Align(
                 alignment: Alignment.topCenter,
                 child: SizedBox(
                   child: CircleAvatar(
@@ -319,6 +354,12 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 favoriteSong3 = value!;
                               },
                             ),
+                            const Text('PUBLIC OR PRIVATE',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                            const SwitchExample(),
                             const SizedBox(
                               height: 15,
                             ),

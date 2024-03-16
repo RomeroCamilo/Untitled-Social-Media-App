@@ -2,11 +2,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_info.dart';
 import 'relationship.dart';
+import 'package:flutter/foundation.dart'
+    show kDebugMode; // Import kDebugMode from foundation.dart
 
 class DatabaseServices {
   //url to our cloud function instance.
-  static const String baseUrl = 'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
-
+  static const String baseUrl =
+      'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
   static Future<void> addUserCloud(String userid, String email, String username,
@@ -40,8 +42,6 @@ class DatabaseServices {
     }
   }
 
-
-
   /* cloud function to retrieve user data */
   static Future<User_Info> getUserCloud(String user_id) async {
     /* call our http endpoint */
@@ -52,7 +52,8 @@ class DatabaseServices {
           headers: {'Content-Type': 'application/json'});
 
       if (response.statusCode == 200) {
-        print('Response from Cloud Function: ${response.body}');
+        print(
+            'Response from Cloud Function this is the one?: ${response.body}');
         // Decode the JSON response into a User_Info object
         final Map<String, dynamic> userMap = json.decode(response.body);
         return User_Info(
@@ -75,7 +76,6 @@ class DatabaseServices {
     }
   }
 
-
   /* cloud function to retrieve user follower and following count */
   static Future<Relationship> getUserCount(String user_id) async {
     /* call our http endpoint */
@@ -93,7 +93,6 @@ class DatabaseServices {
           following_count: userMap['following_count'] ?? '',
           followed_count: userMap['followed_count'] ?? '',
           post_count: userMap['post_count'] ?? '',
-          
         );
       } else {
         print('Failed to fetch user. Status code: ${response.statusCode}');
@@ -105,9 +104,4 @@ class DatabaseServices {
       rethrow;
     }
   }
-
-
-
-
-
 }

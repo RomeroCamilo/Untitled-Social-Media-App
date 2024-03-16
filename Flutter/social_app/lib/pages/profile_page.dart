@@ -14,7 +14,8 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
-  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
+  Relationship?
+      user_stats; // This will store the fetched user data statistics (posts, following, etc)
   late String user_id;
 
   String name = "";
@@ -57,7 +58,8 @@ class ProfilePageState extends State<ProfilePage> {
   // Fetch user follower count for the current user
   void _fetchCount() async {
     try {
-      Relationship userFollowerData = await DatabaseServices.getUserCount(user_id);
+      Relationship userFollowerData =
+          await DatabaseServices.getUserCount(user_id);
       setState(() {
         user_stats = userFollowerData; // Store the fetched data in user_info
         //name = "called";
@@ -69,7 +71,6 @@ class ProfilePageState extends State<ProfilePage> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +151,7 @@ class ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
 
-                // POSTS, FOLLOWERS, FOLLOWING COUNT STATISTICS SECTION 
+                // POSTS, FOLLOWERS, FOLLOWING COUNT STATISTICS SECTION
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -202,7 +203,7 @@ class ProfilePageState extends State<ProfilePage> {
                   children: [
                     Flexible(
                         child: Text(
-                          user_info?.biography ?? name,
+                      user_info?.biography ?? name,
                       //"he/him\nNYC\n22",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ))

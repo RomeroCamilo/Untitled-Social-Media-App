@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_app/navbar/body_view.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -24,9 +25,10 @@ class SearchPage extends StatelessWidget {
         child: Center(
           child: ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const NavBarPage()));
             },
-            child: const Text('Go back!'),
+            child: const Text('Go to profile!'),
           ),
         ),
       ),
