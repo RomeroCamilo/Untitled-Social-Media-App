@@ -155,7 +155,10 @@ class SignupPageState extends State<SignupPage> {
                                     displayName, password, context);
                               }
                             },
-                            child: const Text('SIGN UP')),
+                            child: const Text('SIGN UP',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))),
                       ],
                     ),
                   )

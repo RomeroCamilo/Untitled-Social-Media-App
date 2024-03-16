@@ -140,7 +140,10 @@ class _LoginPageState extends State<LoginPage> {
                                     email, password, context);
                               }
                             },
-                            child: const Text('LOGIN')),
+                            child: const Text('LOGIN',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))),
                       ],
                     ),
                   )
