@@ -55,9 +55,13 @@ class AuthServices {
 
     String isPrivate = "0";
 
+    String biography = '';
+
+    String profile_picture_path = '';
+
     // Step 3: Trigger Cloud Function to create user in the cloud
     await DatabaseServices.addUserCloud(
-        uid, gEmail, username, displayName, isPrivate);
+        uid, gEmail, username, displayName, isPrivate, biography, profile_picture_path);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -87,9 +91,13 @@ class AuthServices {
       /* account is initally public. 0 = public, 1 = private */
       String isPrivate = "0";
 
+      String biography = 'my bio';
+
+      String profile_picture_path = 'my bio';
+
       // Step 3: Trigger Cloud Function to create user in the cloud
       await DatabaseServices.addUserCloud(
-          uid, fEmail, username, displayName, isPrivate);
+          uid, fEmail, username, displayName, isPrivate, biography, profile_picture_path);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation

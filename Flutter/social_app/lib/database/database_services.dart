@@ -12,7 +12,7 @@ class DatabaseServices {
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
   static Future<void> addUserCloud(String userid, String email, String username,
-      String displayName, String isPrivate) async {
+      String displayName, String isPrivate, String biography, String profile_picture_path) async {
     try {
       final response = await http.post(
         Uri.parse(
@@ -27,6 +27,8 @@ class DatabaseServices {
           'username': username,
           'display_name': displayName,
           'email': email,
+          'profile_picture_path': profile_picture_path,
+          'biography': biography,
           'is_private': isPrivate
         }), // Convert the map to a JSON-encoded string
       );
@@ -39,6 +41,38 @@ class DatabaseServices {
       }
     } catch (e) {
       print('Error calling Cloud Function: $e');
+    }
+  }
+
+    /* Function that will connect to our cloud function, and handle adding a editing a user. */
+  static Future<void> editUserCloud(String userid, String username,
+      String displayName, String biography, String isPrivate) async {
+    try {
+      final response = await http.put(
+        Uri.parse(
+            /* cloud function link that handles adding login info to the database */
+            '$baseUrl/userProfiles/helloHttp'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        /* parameters to pass to the post request and then used to insert into database! */
+        body: jsonEncode(<String, String>{
+          'user_id': userid,
+          'username': username,
+          'display_name': displayName,
+          'biography': biography,
+          'is_private': isPrivate
+        }), // Convert the map to a JSON-encoded string
+      );
+
+      if (response.statusCode == 200) {
+        print('Response from Cloud Function: ${response.body}');
+      } else {
+        print(
+            'Failed to call Cloud Function for put. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error calling Cloud Function for put: $e');
     }
   }
 

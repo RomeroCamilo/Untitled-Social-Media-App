@@ -14,8 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
-  Relationship?
-      user_stats; // This will store the fetched user data statistics (posts, following, etc)
+  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
   late String user_id;
 
   String name = "";

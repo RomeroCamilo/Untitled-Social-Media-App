@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
-
+import '../database/database_services.dart';
+import '../database/user_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
     show kDebugMode; // Import kDebugMode from foundation.dart
@@ -12,7 +14,6 @@ class EditProfilePage extends StatefulWidget {
 
 class SwitchExample extends StatefulWidget {
   const SwitchExample({super.key});
-
   @override
   State<SwitchExample> createState() => _SwitchExampleState();
 }
@@ -43,9 +44,11 @@ class _SwitchExampleState extends State<SwitchExample> {
 
 class EditProfilePageState extends State<EditProfilePage> {
   final _formkey = GlobalKey<FormState>();
+  /* parameters for the cloud function */
   String username = '';
-  String displayName = '';
-  String bio = '';
+  String display_name = '';
+  String biography = '';
+  String is_private = '';
   String favoriteArtist1 = '';
   String favoriteArtist2 = '';
   String favoriteArtist3 = '';
@@ -55,6 +58,51 @@ class EditProfilePageState extends State<EditProfilePage> {
   String favoriteSong1 = '';
   String favoriteSong2 = '';
   String favoriteSong3 = '';
+
+  late String user_id;
+  User_Info? user_info; // This will store the fetched user data
+
+  /* init with getting our current user_id */
+  @override
+  void initState() {
+    super.initState();
+    _getUserId();
+  }
+
+  // Retrieve the signed-in user's userId
+  void _getUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        user_id = user.uid;
+        _fetchUser();
+      });
+    }
+  }
+
+  // Fetch user info for the current user
+  void _fetchUser() async {
+    try {
+      User_Info userData = await DatabaseServices.getUserCloud(user_id);
+      setState(() {
+        user_info = userData; // Store the fetched data in user_info object.
+        username = user_info?.display_name ?? "failed";
+        biography = user_info?.biography ?? "failed";
+        is_private = user_info?.is_private ?? "failed";
+
+      });
+    } catch (e) {
+      print('Failed to fetch user info: $e');
+      setState(() {
+        //name = "could not fetch."; // Ensure setState is called to update the UI
+      });
+    }
+  }
+
+  
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,15 +208,16 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('username'),
-                              decoration: const InputDecoration(
+                              decoration:  InputDecoration(
                                   border: OutlineInputBorder(),
                                   hintStyle: TextStyle(color: Colors.white),
                                   // Replace hint text with old user information thats about to be changed
-                                  hintText: 'USERNAME'),
+                                  hintText: user_info?.username ?? 'USERNAME',),
+                                  //hintText: 'USERNAME'),
                               // NEED TO ADD CHECK TO SEE IF USERNAME IS UNIQUE
-
                               validator: (value) {
                                 if (value!.isEmpty || value.contains(' ')) {
+                                  username = user_info?.display_name ?? "failed";
                                   return 'Please Enter Username Without Spaces';
                                 } else {
                                   return null;
@@ -184,14 +233,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
-                              key: const ValueKey('displayname'),
-                              decoration: const InputDecoration(
+                              key: const ValueKey('display_name'),
+                              decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   hintStyle: TextStyle(color: Colors.white),
                                   // Replace hint text with old user information thats about to be changed
-                                  hintText: 'DISPLAY NAME'),
+                                  hintText: user_info?.display_name ?? 'DISPLAY NAME',),
+                                  //hintText: 'DISPLAY NAME'),
                               onSaved: (value) {
-                                displayName = value!;
+                                display_name = value!;
                               },
                             ),
                             const Text('BIO',
@@ -200,14 +250,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
-                              key: const ValueKey('bio'),
-                              decoration: const InputDecoration(
+                              key: const ValueKey('biography'),
+                              decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   hintStyle: TextStyle(color: Colors.white),
                                   // Replace hint text with old user information thats about to be changed
-                                  hintText: 'BIO'),
+                                  hintText: user_info?.biography ?? 'BIOGRAPHY',),
+                                  //hintText: 'BIO'),
                               onSaved: (value) {
-                                bio = value!;
+                                biography = value!;
                               },
                             ),
                             const Text('FAVORITE ARTIST #1',
@@ -369,10 +420,12 @@ class EditProfilePageState extends State<EditProfilePage> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 205, 231, 237),
                                 ),
+                                /* when button is clicked on to edit profile */
                                 onPressed: () {
                                   if (_formkey.currentState!.validate()) {
                                     _formkey.currentState!.save();
                                     // add cloud function to update user info
+                                    DatabaseServices.editUserCloud(user_id, username, display_name, biography, is_private);
                                   }
                                 },
                                 child: const Text('UPDATE INFORMATION',
