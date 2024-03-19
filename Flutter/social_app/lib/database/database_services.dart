@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_info.dart';
 import 'relationship.dart';
+import 'tags.dart';
 import 'package:flutter/foundation.dart'
     show kDebugMode; // Import kDebugMode from foundation.dart
 
@@ -138,4 +139,42 @@ class DatabaseServices {
       rethrow;
     }
   }
+
+  /* getting our user_tags */
+  static Future<List<Tags>> getUserTags(String user_id) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      print('Response from Cloud Function: ${response.body}');
+      List<dynamic> tagsList = json.decode(response.body);
+      return tagsList.map((tagData) => Tags(
+        user_id: tagData['user_id'] ?? '',
+        artist_tag_1: tagData['artist_tag_1'] ?? '',
+        genre_tag_1: tagData['genre_tag_1'] ?? '',
+        song_tag_1: tagData['song_tag_1'] ?? '',
+        artist_tag_2: tagData['artist_tag_2'] ?? '',
+        genre_tag_2: tagData['genre_tag_2'] ?? '',
+        song_tag_2: tagData['song_tag_2'] ?? '',
+        artist_tag_3: tagData['artist_tag_3'] ?? '',
+        genre_tag_3: tagData['genre_tag_3'] ?? '',
+        song_tag_3: tagData['song_tag_3'] ?? '',
+      )).toList();
+    } else {
+      print('Failed to fetch user tags. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to fetch user tags');
+    }
+  } catch (error) {
+    print('Error fetching user tags: $error');
+    rethrow;
+  }
 }
+
+
+
+}
+

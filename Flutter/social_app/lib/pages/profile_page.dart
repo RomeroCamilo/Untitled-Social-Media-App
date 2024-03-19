@@ -5,6 +5,7 @@ import 'package:social_app/functions/go_to.dart';
 import '../database/database_services.dart';
 import '../database/user_info.dart';
 import '../database/relationship.dart';
+import '../database/tags.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
+  List<Tags> tag_info = []; // This will store the fetched user data
   Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
   late String user_id;
 
@@ -32,8 +34,12 @@ class ProfilePageState extends State<ProfilePage> {
     if (user != null) {
       setState(() {
         user_id = user.uid;
+        /* fetch user data */
         _fetchUser();
+        /* fetch user follower count */
         _fetchCount();
+        /* fetch user tags */
+        _fetchTags();
       });
     }
   }
@@ -65,6 +71,21 @@ class ProfilePageState extends State<ProfilePage> {
       });
     } catch (e) {
       print('Failed to fetch user info count: $e');
+      setState(() {
+        //name = "could not fetch."; // Ensure setState is called to update the UI
+      });
+    }
+  }
+
+  // Fetch tags for the current user
+  void _fetchTags() async {
+    try {
+      List<Tags> tagsData = await DatabaseServices.getUserTags(user_id);
+      setState(() {
+        tag_info = tagsData; // Store the fetched data in tags
+      });
+    } catch (e) {
+      print('Failed to fetch tags data: $e');
       setState(() {
         //name = "could not fetch."; // Ensure setState is called to update the UI
       });
@@ -219,7 +240,8 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   Flexible(
                     child: Text(
-                      "Linkin Park : Taylor Swift : Ice Nine Kills",
+                      //"Metalcore : Alternative Metal : Hyperpop",
+                      tag_info.isNotEmpty ? "${tag_info[0].artist_tag_1 ?? ''} : ${tag_info[0].artist_tag_2 ?? ''} : ${tag_info[0].artist_tag_3 ?? ''}": " :  : ",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
@@ -233,7 +255,8 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   Flexible(
                     child: Text(
-                      "Metalcore : Alternative Metal : Hyperpop",
+                      //"Metalcore : Alternative Metal : Hyperpop",
+                      tag_info.isNotEmpty ? "${tag_info[0].genre_tag_1 ?? ''} : ${tag_info[0].genre_tag_2 ?? ''} : ${tag_info[0].genre_tag_3 ?? ''}": " :  : ",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
@@ -247,7 +270,8 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   Flexible(
                     child: Text(
-                      "My December",
+                      //"My December",
+                      tag_info.isNotEmpty ? "${tag_info[0].song_tag_1 ?? ''} : ${tag_info[0].song_tag_2 ?? ''} : ${tag_info[0].song_tag_3 ?? ''}": " :  : ",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
