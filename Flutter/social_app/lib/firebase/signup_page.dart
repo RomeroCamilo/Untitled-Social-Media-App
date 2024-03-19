@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:social_app/firebase/authfunctions.dart';
 import '../functions/go_to.dart';
+import '../database/tags.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});

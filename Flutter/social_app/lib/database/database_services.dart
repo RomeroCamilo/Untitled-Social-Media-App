@@ -175,6 +175,73 @@ class DatabaseServices {
 }
 
 
+/* put function to update the tags the user is displaying */
+static Future<void> updateUserTags(String user_id, Tags updatedTags) async {
+  try {
+    final response = await http.put(
+      Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'user_id': updatedTags.user_id,
+        'artist_tag_1': updatedTags.artist_tag_1,
+        'genre_tag_1': updatedTags.genre_tag_1,
+        'song_tag_1': updatedTags.song_tag_1,
+        'artist_tag_2': updatedTags.artist_tag_2,
+        'genre_tag_2': updatedTags.genre_tag_2,
+        'song_tag_2': updatedTags.song_tag_2,
+        'artist_tag_3': updatedTags.artist_tag_3,
+        'genre_tag_3': updatedTags.genre_tag_3,
+        'song_tag_3': updatedTags.song_tag_3,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('User tags updated successfully: ${response.body}');
+    } else {
+      print('Failed to update user tags. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to update user tags');
+    }
+  } catch (error) {
+    print('Error updating user tags: $error');
+    rethrow;
+  }
+}
+
+static Future<void> createUserTags(String user_id, Tags newTags) async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/favorites_tags/helloHttp'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode([{
+        'user_id': user_id,
+        'artist_tag_1': newTags.artist_tag_1,
+        'genre_tag_1': newTags.genre_tag_1,
+        'song_tag_1': newTags.song_tag_1,
+        'artist_tag_2': newTags.artist_tag_2,
+        'genre_tag_2': newTags.genre_tag_2,
+        'song_tag_2': newTags.song_tag_2,
+        'artist_tag_3': newTags.artist_tag_3,
+        'genre_tag_3': newTags.genre_tag_3,
+        'song_tag_3': newTags.song_tag_3,
+      }]),
+    );
+
+    if (response.statusCode == 200) {
+      print('User tags created successfully: ${response.body}');
+    } else {
+      print('Failed to create user tags. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to create user tags');
+    }
+  } catch (error) {
+    print('Error creating user tags: $error');
+    rethrow;
+  }
+}
+
+
+
 
 }
 

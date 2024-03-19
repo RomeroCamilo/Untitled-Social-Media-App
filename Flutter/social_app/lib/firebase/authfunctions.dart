@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../database/database_services.dart';
 import '../functions/go_to.dart';
+import '../database/tags.dart';
 
 // Website below is about the functions to access firebase authentication
 // https://firebase.google.com/docs/auth/flutter/manage-users
@@ -59,9 +60,27 @@ class AuthServices {
 
     String profile_picture_path = '';
 
+    /* will store updated information */
+    Tags myTags = Tags(
+      user_id: uid, // Set this to the actual user ID when available
+      artist_tag_1: 'None',
+      genre_tag_1: 'None',
+      song_tag_1: 'None',
+      artist_tag_2: 'None',
+      genre_tag_2: 'None',
+      song_tag_2: 'None',
+      artist_tag_3: 'None',
+      genre_tag_3: 'None',
+      song_tag_3: 'None',
+    );
+
+    //myTags.user_id = uid;
+
     // Step 3: Trigger Cloud Function to create user in the cloud
-    await DatabaseServices.addUserCloud(
-        uid, gEmail, username, displayName, isPrivate, biography, profile_picture_path);
+    DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate, biography, profile_picture_path);
+
+    DatabaseServices.createUserTags(uid, myTags);
+
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -95,9 +114,25 @@ class AuthServices {
 
       String profile_picture_path = 'my bio';
 
+      /* will store updated information */
+    Tags myTags = Tags(
+      user_id: uid, // Set this to the actual user ID when available
+      artist_tag_1: 'None',
+      genre_tag_1: 'None',
+      song_tag_1: 'None',
+      artist_tag_2: 'None',
+      genre_tag_2: 'None',
+      song_tag_2: 'None',
+      artist_tag_3: 'None',
+      genre_tag_3: 'None',
+      song_tag_3: 'None',
+    );
+
       // Step 3: Trigger Cloud Function to create user in the cloud
-      await DatabaseServices.addUserCloud(
-          uid, fEmail, username, displayName, isPrivate, biography, profile_picture_path);
+      DatabaseServices.addUserCloud(uid, fEmail, username, displayName, isPrivate, biography, profile_picture_path);
+
+      DatabaseServices.createUserTags(uid, myTags);
+
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation
