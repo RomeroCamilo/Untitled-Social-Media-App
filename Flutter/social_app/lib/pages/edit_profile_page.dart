@@ -19,23 +19,23 @@ class SwitchExample extends StatefulWidget {
 }
 
 class _SwitchExampleState extends State<SwitchExample> {
-  String is_private = '0'; // Declare is_private variable to track switch state
+  String private_profile = '0'; // Declare private_profile variable to track switch state
 
   @override
   Widget build(BuildContext context) {
     return Switch(
       value:
-          is_private == '1', // Convert is_private to boolean for Switch widget
+          private_profile == '1', // Convert private_profile to boolean for Switch widget
       activeColor: const Color.fromARGB(255, 120, 2, 2),
       onChanged: (bool value) {
         setState(() {
-          is_private =
-              value ? '1' : '0'; // Update is_private with the new switch state
+          private_profile =
+              value ? '1' : '0'; // Update private_profile with the new switch state
         });
 
         if (kDebugMode) {
           // Use a logging framework (e.g., logger package) instead of print for production code
-          debugPrint('Switch value changed: $is_private, this is a string');
+          debugPrint('Switch value changed: $private_profile, this is a string');
         }
       },
     );
@@ -48,7 +48,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   String username = '';
   String display_name = '';
   String biography = '';
-  String is_private = '';
+  String private_profile = '1';
   String favoriteArtist1 = '';
   String favoriteArtist2 = '';
   String favoriteArtist3 = '';
@@ -88,7 +88,7 @@ class EditProfilePageState extends State<EditProfilePage> {
         user_info = userData; // Store the fetched data in user_info object.
         username = user_info?.display_name ?? "failed";
         biography = user_info?.biography ?? "failed";
-        is_private = user_info?.private_profile ?? "failed";
+        private_profile = user_info?.private_profile ?? "failed";
 
       });
     } catch (e) {
@@ -425,7 +425,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                   if (_formkey.currentState!.validate()) {
                                     _formkey.currentState!.save();
                                     // add cloud function to update user info
-                                    DatabaseServices.editUserCloud(user_id, username, display_name, biography, is_private);
+                                    DatabaseServices.editUserCloud(user_id, username, display_name, biography, private_profile);
                                   }
                                 },
                                 child: const Text('UPDATE INFORMATION',
