@@ -47,7 +47,7 @@ class ProfilePageState extends State<ProfilePage> {
         //name = "called";
       });
     } catch (e) {
-      print('Failed to fetch user info: $e');
+      print('Failed to fetch user info data: $e');
       setState(() {
         //name = "could not fetch."; // Ensure setState is called to update the UI
       });
@@ -64,7 +64,7 @@ class ProfilePageState extends State<ProfilePage> {
         //name = "called";
       });
     } catch (e) {
-      print('Failed to fetch user info: $e');
+      print('Failed to fetch user info count: $e');
       setState(() {
         //name = "could not fetch."; // Ensure setState is called to update the UI
       });

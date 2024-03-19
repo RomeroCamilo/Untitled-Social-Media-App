@@ -29,7 +29,7 @@ class DatabaseServices {
           'email': email,
           'profile_picture_path': profile_picture_path,
           'biography': biography,
-          'is_private': isPrivate
+          'private_profile': isPrivate
         }), // Convert the map to a JSON-encoded string
       );
 
@@ -61,7 +61,7 @@ class DatabaseServices {
           'username': username,
           'display_name': displayName,
           'biography': biography,
-          'is_private': isPrivate
+          'private_profile': isPrivate
         }), // Convert the map to a JSON-encoded string
       );
 
@@ -97,7 +97,7 @@ class DatabaseServices {
           email: userMap['email'] ?? '',
           profile_picture_path: userMap['profile_picture_path'] ?? '',
           biography: userMap['biography'] ?? '',
-          is_private: userMap['is_private'] ?? false,
+          private_profile: userMap['private_profile'] ?? '',
         );
       } else {
         print('Failed to fetch user. Status code: ${response.statusCode}');

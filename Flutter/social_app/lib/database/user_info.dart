@@ -6,7 +6,7 @@ class User_Info {
   String email;
   String profile_picture_path;
   String biography;
-  String is_private;
+  String private_profile;
 
   User_Info(
       {required this.user_id,
@@ -15,5 +15,5 @@ class User_Info {
       required this.email,
       required this.profile_picture_path,
       required this.biography,
-      required this.is_private});
+      required this.private_profile});
 }

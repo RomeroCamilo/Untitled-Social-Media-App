@@ -88,7 +88,7 @@ class EditProfilePageState extends State<EditProfilePage> {
         user_info = userData; // Store the fetched data in user_info object.
         username = user_info?.display_name ?? "failed";
         biography = user_info?.biography ?? "failed";
-        is_private = user_info?.is_private ?? "failed";
+        is_private = user_info?.private_profile ?? "failed";
 
       });
     } catch (e) {
