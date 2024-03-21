@@ -12,8 +12,14 @@ class DatabaseServices {
       'https://us-central1-music-social-media-app-414401.cloudfunctions.net';
 
   /* Function that will connect to our cloud function, and handle adding a new user without gmail sign in method. */
-  static Future<void> addUserCloud(String userid, String email, String username,
-      String displayName, String isPrivate, String biography, String profile_picture_path) async {
+  static Future<void> addUserCloud(
+      String userid,
+      String email,
+      String username,
+      String displayName,
+      String isPrivate,
+      String biography,
+      String profile_picture_path) async {
     try {
       final response = await http.post(
         Uri.parse(
@@ -45,9 +51,9 @@ class DatabaseServices {
     }
   }
 
-    /* Function that will connect to our cloud function, and handle adding a editing a user. */
+  /* Function that will connect to our cloud function, and handle adding a editing a user. */
   static Future<void> editUserCloud(String userid, String username,
-      String displayName, String biography, String isPrivate) async {
+      String displayName, String biography, String private_profile) async {
     try {
       final response = await http.put(
         Uri.parse(
@@ -62,7 +68,7 @@ class DatabaseServices {
           'username': username,
           'display_name': displayName,
           'biography': biography,
-          'private_profile': isPrivate
+          'private_profile': private_profile
         }), // Convert the map to a JSON-encoded string
       );
 
@@ -142,106 +148,106 @@ class DatabaseServices {
 
   /* getting our user_tags */
   static Future<List<Tags>> getUserTags(String user_id) async {
-  try {
-    final response = await http.get(
-      Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
-      headers: {'Content-Type': 'application/json'},
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
+        headers: {'Content-Type': 'application/json'},
+      );
 
-    if (response.statusCode == 200) {
-      print('Response from Cloud Function: ${response.body}');
-      List<dynamic> tagsList = json.decode(response.body);
-      return tagsList.map((tagData) => Tags(
-        user_id: tagData['user_id'] ?? '',
-        artist_tag_1: tagData['artist_tag_1'] ?? '',
-        genre_tag_1: tagData['genre_tag_1'] ?? '',
-        song_tag_1: tagData['song_tag_1'] ?? '',
-        artist_tag_2: tagData['artist_tag_2'] ?? '',
-        genre_tag_2: tagData['genre_tag_2'] ?? '',
-        song_tag_2: tagData['song_tag_2'] ?? '',
-        artist_tag_3: tagData['artist_tag_3'] ?? '',
-        genre_tag_3: tagData['genre_tag_3'] ?? '',
-        song_tag_3: tagData['song_tag_3'] ?? '',
-      )).toList();
-    } else {
-      print('Failed to fetch user tags. Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to fetch user tags');
+      if (response.statusCode == 200) {
+        print('Response from Cloud Function: ${response.body}');
+        List<dynamic> tagsList = json.decode(response.body);
+        return tagsList
+            .map((tagData) => Tags(
+                  user_id: tagData['user_id'] ?? '',
+                  artist_tag_1: tagData['artist_tag_1'] ?? '',
+                  genre_tag_1: tagData['genre_tag_1'] ?? '',
+                  song_tag_1: tagData['song_tag_1'] ?? '',
+                  artist_tag_2: tagData['artist_tag_2'] ?? '',
+                  genre_tag_2: tagData['genre_tag_2'] ?? '',
+                  song_tag_2: tagData['song_tag_2'] ?? '',
+                  artist_tag_3: tagData['artist_tag_3'] ?? '',
+                  genre_tag_3: tagData['genre_tag_3'] ?? '',
+                  song_tag_3: tagData['song_tag_3'] ?? '',
+                ))
+            .toList();
+      } else {
+        print('Failed to fetch user tags. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to fetch user tags');
+      }
+    } catch (error) {
+      print('Error fetching user tags: $error');
+      rethrow;
     }
-  } catch (error) {
-    print('Error fetching user tags: $error');
-    rethrow;
   }
-}
-
 
 /* put function to update the tags the user is displaying */
-static Future<void> updateUserTags(String user_id, Tags updatedTags) async {
-  try {
-    final response = await http.put(
-      Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'user_id': updatedTags.user_id,
-        'artist_tag_1': updatedTags.artist_tag_1,
-        'genre_tag_1': updatedTags.genre_tag_1,
-        'song_tag_1': updatedTags.song_tag_1,
-        'artist_tag_2': updatedTags.artist_tag_2,
-        'genre_tag_2': updatedTags.genre_tag_2,
-        'song_tag_2': updatedTags.song_tag_2,
-        'artist_tag_3': updatedTags.artist_tag_3,
-        'genre_tag_3': updatedTags.genre_tag_3,
-        'song_tag_3': updatedTags.song_tag_3,
-      }),
-    );
+  static Future<void> updateUserTags(String user_id, Tags updatedTags) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/favorites_tags/helloHttp?user_id=$user_id'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'user_id': updatedTags.user_id,
+          'artist_tag_1': updatedTags.artist_tag_1,
+          'genre_tag_1': updatedTags.genre_tag_1,
+          'song_tag_1': updatedTags.song_tag_1,
+          'artist_tag_2': updatedTags.artist_tag_2,
+          'genre_tag_2': updatedTags.genre_tag_2,
+          'song_tag_2': updatedTags.song_tag_2,
+          'artist_tag_3': updatedTags.artist_tag_3,
+          'genre_tag_3': updatedTags.genre_tag_3,
+          'song_tag_3': updatedTags.song_tag_3,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      print('User tags updated successfully: ${response.body}');
-    } else {
-      print('Failed to update user tags. Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to update user tags');
+      if (response.statusCode == 200) {
+        print('User tags updated successfully: ${response.body}');
+      } else {
+        print(
+            'Failed to update user tags. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to update user tags');
+      }
+    } catch (error) {
+      print('Error updating user tags: $error');
+      rethrow;
     }
-  } catch (error) {
-    print('Error updating user tags: $error');
-    rethrow;
+  }
+
+  static Future<void> createUserTags(String user_id, Tags newTags) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/favorites_tags/helloHttp'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode([
+          {
+            'user_id': user_id,
+            'artist_tag_1': newTags.artist_tag_1,
+            'genre_tag_1': newTags.genre_tag_1,
+            'song_tag_1': newTags.song_tag_1,
+            'artist_tag_2': newTags.artist_tag_2,
+            'genre_tag_2': newTags.genre_tag_2,
+            'song_tag_2': newTags.song_tag_2,
+            'artist_tag_3': newTags.artist_tag_3,
+            'genre_tag_3': newTags.genre_tag_3,
+            'song_tag_3': newTags.song_tag_3,
+          }
+        ]),
+      );
+
+      if (response.statusCode == 200) {
+        print('User tags created successfully: ${response.body}');
+      } else {
+        print(
+            'Failed to create user tags. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to create user tags');
+      }
+    } catch (error) {
+      print('Error creating user tags: $error');
+      rethrow;
+    }
   }
 }
-
-static Future<void> createUserTags(String user_id, Tags newTags) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/favorites_tags/helloHttp'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode([{
-        'user_id': user_id,
-        'artist_tag_1': newTags.artist_tag_1,
-        'genre_tag_1': newTags.genre_tag_1,
-        'song_tag_1': newTags.song_tag_1,
-        'artist_tag_2': newTags.artist_tag_2,
-        'genre_tag_2': newTags.genre_tag_2,
-        'song_tag_2': newTags.song_tag_2,
-        'artist_tag_3': newTags.artist_tag_3,
-        'genre_tag_3': newTags.genre_tag_3,
-        'song_tag_3': newTags.song_tag_3,
-      }]),
-    );
-
-    if (response.statusCode == 200) {
-      print('User tags created successfully: ${response.body}');
-    } else {
-      print('Failed to create user tags. Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to create user tags');
-    }
-  } catch (error) {
-    print('Error creating user tags: $error');
-    rethrow;
-  }
-}
-
-
-
-
-}
-

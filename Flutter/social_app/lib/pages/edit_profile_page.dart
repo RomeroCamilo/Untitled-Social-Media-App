@@ -2,7 +2,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:social_app/navbar/body_view.dart';
 import 'package:social_app/pages/profile_page.dart';
-
 import '../database/database_services.dart';
 import '../database/user_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,47 +16,14 @@ class EditProfilePage extends StatefulWidget {
   EditProfilePageState createState() => EditProfilePageState();
 }
 
-class SwitchExample extends StatefulWidget {
-  const SwitchExample({super.key});
-  @override
-  State<SwitchExample> createState() => _SwitchExampleState();
-}
-
-class _SwitchExampleState extends State<SwitchExample> {
-  String private_profile =
-      '0'; // Declare private_profile variable to track switch state
-
-  @override
-  Widget build(BuildContext context) {
-    return Switch(
-      value: private_profile ==
-          '1', // Convert private_profile to boolean for Switch widget
-      activeColor: const Color.fromARGB(255, 120, 2, 2),
-      onChanged: (bool value) {
-        setState(() {
-          private_profile = value
-              ? '1'
-              : '0'; // Update private_profile with the new switch state
-        });
-
-        if (kDebugMode) {
-          // Use a logging framework (e.g., logger package) instead of print for production code
-          debugPrint(
-              'Switch value changed: $private_profile, this is a string');
-        }
-      },
-    );
-  }
-}
-
 class EditProfilePageState extends State<EditProfilePage> {
   final _formkey = GlobalKey<FormState>();
   /* parameters for the cloud function */
   String username = '';
   String display_name = '';
   String biography = '';
-  String private_profile = '1';
-  late String user_id;
+  String private_profile = '';
+  static late String user_id;
   User_Info? user_info; // This will store the fetched user data
 
   /*
@@ -143,8 +109,17 @@ class EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  bool toBoolean(String str) {
+    if (str == '1') {
+      return true; // If the string is '1', return true
+    }
+    return str.toLowerCase() ==
+        'true'; // Otherwise, return true if the string is 'true', otherwise return false
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool light = false;
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(
@@ -483,7 +458,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
-                            const SwitchExample(),
+                            SwitchExample(
+                              private_profile: private_profile,
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  private_profile = newValue;
+                                });
+                              },
+                            ),
                             const SizedBox(
                               height: 15,
                             ),
@@ -523,5 +505,27 @@ class EditProfilePageState extends State<EditProfilePage> {
             )
           ]),
         ));
+  }
+}
+
+class SwitchExample extends StatelessWidget {
+  final String private_profile;
+  final ValueChanged<String> onChanged;
+
+  const SwitchExample({
+    required this.private_profile,
+    required this.onChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: private_profile == '1', // Convert to boolean for Switch widget
+      activeColor: const Color.fromARGB(255, 120, 2, 2),
+      onChanged: (bool value) {
+        onChanged(value ? '1' : '0'); // Convert boolean value to string
+      },
+    );
   }
 }
