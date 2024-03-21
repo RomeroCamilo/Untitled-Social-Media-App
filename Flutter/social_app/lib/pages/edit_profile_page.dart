@@ -1,11 +1,14 @@
 // ignore_for_file: non_constant_identifier_names
+import 'package:flutter/widgets.dart';
+import 'package:social_app/navbar/body_view.dart';
+import 'package:social_app/pages/profile_page.dart';
+
 import '../database/database_services.dart';
 import '../database/user_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../database/tags.dart';
 import 'package:flutter/foundation.dart'
-
     show kDebugMode; // Import kDebugMode from foundation.dart
 
 class EditProfilePage extends StatefulWidget {
@@ -21,23 +24,26 @@ class SwitchExample extends StatefulWidget {
 }
 
 class _SwitchExampleState extends State<SwitchExample> {
-  String private_profile = '0'; // Declare private_profile variable to track switch state
+  String private_profile =
+      '0'; // Declare private_profile variable to track switch state
 
   @override
   Widget build(BuildContext context) {
     return Switch(
-      value:
-          private_profile == '1', // Convert private_profile to boolean for Switch widget
+      value: private_profile ==
+          '1', // Convert private_profile to boolean for Switch widget
       activeColor: const Color.fromARGB(255, 120, 2, 2),
       onChanged: (bool value) {
         setState(() {
-          private_profile =
-              value ? '1' : '0'; // Update private_profile with the new switch state
+          private_profile = value
+              ? '1'
+              : '0'; // Update private_profile with the new switch state
         });
 
         if (kDebugMode) {
           // Use a logging framework (e.g., logger package) instead of print for production code
-          debugPrint('Switch value changed: $private_profile, this is a string');
+          debugPrint(
+              'Switch value changed: $private_profile, this is a string');
         }
       },
     );
@@ -65,7 +71,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   String favoriteSong2 = '';
   String favoriteSong3 = '';
   */
-  
+
   /* will store updated information */
   Tags myTags = Tags(
     user_id: '', // Set this to the actual user ID when available
@@ -78,9 +84,8 @@ class EditProfilePageState extends State<EditProfilePage> {
     artist_tag_3: '',
     genre_tag_3: '',
     song_tag_3: '',
-);
+  );
 
-  
   List<Tags> tag_info = []; // This will store the fetched user data
 
   /* init with getting our current user_id */
@@ -114,7 +119,6 @@ class EditProfilePageState extends State<EditProfilePage> {
         username = user_info?.display_name ?? "failed";
         biography = user_info?.biography ?? "failed";
         private_profile = user_info?.private_profile ?? "failed";
-
       });
     } catch (e) {
       print('Failed to fetch user info: $e');
@@ -138,11 +142,6 @@ class EditProfilePageState extends State<EditProfilePage> {
       });
     }
   }
-
-  
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -248,16 +247,16 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('username'),
-                              decoration:  InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: user_info?.username ?? 'USERNAME',),
-                                  //hintText: 'USERNAME'),
+                              controller: TextEditingController(
+                                  text: '${user_info?.username}'),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               // NEED TO ADD CHECK TO SEE IF USERNAME IS UNIQUE
                               validator: (value) {
                                 if (value!.isEmpty || value.contains(' ')) {
-                                  username = user_info?.display_name ?? "failed";
+                                  username =
+                                      user_info?.display_name ?? "failed";
                                   return 'Please Enter Username Without Spaces';
                                 } else {
                                   return null;
@@ -274,12 +273,11 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('display_name'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: user_info?.display_name ?? 'DISPLAY NAME',),
-                                  //hintText: 'DISPLAY NAME'),
+                              controller: TextEditingController(
+                                  text: '${user_info?.display_name}'),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 display_name = value!;
                               },
@@ -291,12 +289,11 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('biography'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: user_info?.biography ?? 'BIOGRAPHY',),
-                                  //hintText: 'BIO'),
+                              controller: TextEditingController(
+                                  text: '${user_info?.biography}'),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 biography = value!;
                               },
@@ -308,12 +305,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoriteartist1'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].artist_tag_1 ?? 'FAVORITE ARTIST #1' : 'FAVORITE ARTIST #1',),
-                                  //hintText: 'FAVORITE ARTIST #1'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].artist_tag_1
+                                    : 'FAVORITE ARTIST #1',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteArtist1 = value!;
                                 myTags.artist_tag_1 = value!;
@@ -326,11 +325,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoriteartist2'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].artist_tag_2 ?? 'FAVORITE ARTIST #2' : 'FAVORITE ARTIST #2',),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].artist_tag_2
+                                    : 'FAVORITE ARTIST #2',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteArtist2 = value!;
                                 myTags.artist_tag_2 = value!;
@@ -342,16 +344,18 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
-                              key:  ValueKey('favoriteartist3'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].artist_tag_3 ?? 'FAVORITE ARTIST #3' : 'FAVORITE ARTIST #3',),
-                                  //hintText: 'FAVORITE ARTIST #3'),
+                              key: const ValueKey('favoriteartist3'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].artist_tag_3
+                                    : 'FAVORITE ARTIST #3',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteArtist3 = value!;
-                                 myTags.artist_tag_3 = value!;
+                                myTags.artist_tag_3 = value!;
                               },
                             ),
                             const Text('FAVORITE GENRE #1',
@@ -361,15 +365,17 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoritegenre1'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].genre_tag_1 ?? 'FAVORITE GENRE #1' : 'FAVORITE GENRE #1',),
-                                  //hintText: 'FAVORITE GENRE #1'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].genre_tag_1
+                                    : 'FAVORITE GENRE #1',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteGenre1 = value!;
-                                 myTags.genre_tag_1 = value!;
+                                myTags.genre_tag_1 = value!;
                               },
                             ),
                             const Text('FAVORITE GENRE #2',
@@ -378,13 +384,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
-                              key: ValueKey('favoritegenre2'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].genre_tag_2 ?? 'FAVORITE GENRE #2' : 'FAVORITE GENRE #2',),
-                                  //hintText: 'FAVORITE GENRE #2'),
+                              key: const ValueKey('favoritegenre2'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].genre_tag_2
+                                    : 'FAVORITE GENRE #2',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteGenre2 = value!;
                                 myTags.genre_tag_2 = value!;
@@ -396,13 +404,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
-                              key: ValueKey('favoritegenre3'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].genre_tag_3 ?? 'FAVORITE GENRE #3' : 'FAVORITE GENRE #3',),
-                                  //hintText: 'FAVORITE GENRE #3'),
+                              key: const ValueKey('favoritegenre3'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].genre_tag_3
+                                    : 'FAVORITE GENRE #3',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteGenre3 = value!;
                                 myTags.genre_tag_3 = value!;
@@ -415,12 +425,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoritesong1'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].song_tag_1 ?? 'FAVORITE SONG #1' : 'FAVORITE SONG #1',),
-                                  //hintText: 'FAVORITE SONG #1'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].song_tag_1
+                                    : 'FAVORITE SONG #1',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteSong1 = value!;
                                 myTags.song_tag_1 = value!;
@@ -433,12 +445,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoritesong2'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].song_tag_2 ?? 'FAVORITE SONG #2' : 'FAVORITE SONG #2',),
-                                  //hintText: 'FAVORITE SONG #2'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].song_tag_2
+                                    : 'FAVORITE SONG #2',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteSong2 = value!;
                                 myTags.song_tag_2 = value!;
@@ -451,12 +465,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                             TextFormField(
                               style: const TextStyle(color: Colors.white),
                               key: const ValueKey('favoritesong3'),
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  // Replace hint text with old user information thats about to be changed
-                                  hintText: tag_info.isNotEmpty ? tag_info[0].song_tag_3 ?? 'FAVORITE SONG #3' : 'FAVORITE SONG #3',),
-                                 // hintText: 'FAVORITE SONG #3'),
+                              controller: TextEditingController(
+                                text: tag_info.isNotEmpty
+                                    ? tag_info[0].song_tag_3
+                                    : 'FAVORITE SONG #3',
+                              ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                               onSaved: (value) {
                                 //favoriteSong3 = value!;
                                 myTags.song_tag_3 = value!;
@@ -482,8 +498,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                   if (_formkey.currentState!.validate()) {
                                     _formkey.currentState!.save();
                                     // add cloud function to update user info
-                                    DatabaseServices.editUserCloud(user_id, username, display_name, biography, private_profile);
-                                    DatabaseServices.updateUserTags(user_id, myTags);
+                                    DatabaseServices.editUserCloud(
+                                        user_id,
+                                        username,
+                                        display_name,
+                                        biography,
+                                        private_profile);
+                                    DatabaseServices.updateUserTags(
+                                        user_id, myTags);
+                                    Navigator.pop(context);
                                   }
                                 },
                                 child: const Text('UPDATE INFORMATION',

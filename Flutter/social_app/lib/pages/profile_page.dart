@@ -227,7 +227,6 @@ class ProfilePageState extends State<ProfilePage> {
                     Flexible(
                         child: Text(
                       user_info?.biography ?? name,
-                      //"he/him\nNYC\n22",
                       style: const TextStyle(color: Colors.white, fontSize: 22),
                     ))
                   ],
@@ -244,8 +243,8 @@ class ProfilePageState extends State<ProfilePage> {
                   Flexible(
                     child: Text(
                       tag_info.isNotEmpty
-                          ? "${tag_info[0].artist_tag_1 ?? ''} : ${tag_info[0].artist_tag_2 ?? ''} : ${tag_info[0].artist_tag_3 ?? ''}"
-                          : " :  : ",
+                          ? "${tag_info[0].artist_tag_1 ?? ''} | ${tag_info[0].artist_tag_2 ?? ''} | ${tag_info[0].artist_tag_3 ?? ''}"
+                          : "",
                       style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
@@ -261,8 +260,8 @@ class ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       //"Metalcore : Alternative Metal : Hyperpop",
                       tag_info.isNotEmpty
-                          ? "${tag_info[0].genre_tag_1 ?? ''} : ${tag_info[0].genre_tag_2 ?? ''} : ${tag_info[0].genre_tag_3 ?? ''}"
-                          : " :  : ",
+                          ? "${tag_info[0].genre_tag_1 ?? ''} | ${tag_info[0].genre_tag_2 ?? ''} | ${tag_info[0].genre_tag_3 ?? ''}"
+                          : "",
                       style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
@@ -278,8 +277,8 @@ class ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       //"My December",
                       tag_info.isNotEmpty
-                          ? "${tag_info[0].song_tag_1 ?? ''} : ${tag_info[0].song_tag_2 ?? ''} : ${tag_info[0].song_tag_3 ?? ''}"
-                          : " :  : ",
+                          ? "${tag_info[0].song_tag_1 ?? ''} | ${tag_info[0].song_tag_2 ?? ''} | ${tag_info[0].song_tag_3 ?? ''}"
+                          : "",
                       style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
