@@ -458,7 +458,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
-                            SwitchExample(
+                            SwitchButton(
                               private_profile: private_profile,
                               onChanged: (String newValue) {
                                 setState(() {
@@ -508,11 +508,11 @@ class EditProfilePageState extends State<EditProfilePage> {
   }
 }
 
-class SwitchExample extends StatelessWidget {
+class SwitchButton extends StatelessWidget {
   final String private_profile;
   final ValueChanged<String> onChanged;
 
-  const SwitchExample({
+  const SwitchButton({
     required this.private_profile,
     required this.onChanged,
     Key? key,
