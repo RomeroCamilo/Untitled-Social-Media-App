@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_app/pages/home_page.dart';
 import 'package:social_app/pages/notification_page.dart';
@@ -20,7 +21,7 @@ class _NavBarPage extends State<NavBarPage> {
     const SearchPage(),
     const NewPostPage(),
     const NotificationPage(),
-    const ProfilePage(),
+    ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),
   ];
   @override
   Widget build(BuildContext context) {

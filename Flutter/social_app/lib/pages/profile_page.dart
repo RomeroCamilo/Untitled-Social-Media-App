@@ -8,7 +8,8 @@ import '../database/relationship.dart';
 import '../database/tags.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String uid;
+  const ProfilePage({super.key, required this.uid});
   @override
   ProfilePageState createState() => ProfilePageState();
 }
@@ -16,8 +17,8 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
   List<Tags> tag_info = []; // This will store the fetched user data
-  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
-  late String user_id;
+  Relationship?
+      user_stats; // This will store the fetched user data statistics (posts, following, etc)
 
   String name = "";
 
@@ -25,29 +26,31 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserId();
+    _fetchUser();
+    _fetchCount();
+    _fetchTags();
   }
 
   // Retrieve the signed-in user's userId
-  void _getUserId() {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      setState(() {
-        user_id = user.uid;
-        /* fetch user data */
-        _fetchUser();
-        /* fetch user follower count */
-        _fetchCount();
-        /* fetch user tags */
-        _fetchTags();
-      });
-    }
-  }
+  // void _getUserId() {
+  //   User? user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     setState(() {
+  //       user_id = user.uid;
+  //       /* fetch user data */
+  //       _fetchUser();
+  //       /* fetch user follower count */
+  //       _fetchCount();
+  //       /* fetch user tags */
+  //       _fetchTags();
+  //     });
+  //   }
+  // }
 
   // Fetch user info for the current user
   void _fetchUser() async {
     try {
-      User_Info userData = await DatabaseServices.getUserCloud(user_id);
+      User_Info userData = await DatabaseServices.getUserCloud(widget.uid);
       setState(() {
         user_info = userData; // Store the fetched data in user_info
         //name = "called";
@@ -64,7 +67,7 @@ class ProfilePageState extends State<ProfilePage> {
   void _fetchCount() async {
     try {
       Relationship userFollowerData =
-          await DatabaseServices.getUserCount(user_id);
+          await DatabaseServices.getUserCount(widget.uid);
       setState(() {
         user_stats = userFollowerData; // Store the fetched data in user_info
         //name = "called";
@@ -80,7 +83,7 @@ class ProfilePageState extends State<ProfilePage> {
   // Fetch tags for the current user
   void _fetchTags() async {
     try {
-      List<Tags> tagsData = await DatabaseServices.getUserTags(user_id);
+      List<Tags> tagsData = await DatabaseServices.getUserTags(widget.uid);
       setState(() {
         tag_info = tagsData; // Store the fetched data in tags
       });
@@ -113,7 +116,7 @@ class ProfilePageState extends State<ProfilePage> {
             Column(
               children: [
                 // PROFILE PICTURE SECTION
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
@@ -133,7 +136,7 @@ class ProfilePageState extends State<ProfilePage> {
                       onPressed: () async {
                         goToEditProfile(context);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit,
                         color: Colors.white,
                       ),
@@ -142,7 +145,7 @@ class ProfilePageState extends State<ProfilePage> {
                       //"jason liang",
                       user_info?.display_name ?? name,
                       //user_data[0].display_name,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                           fontSize: 30),
@@ -157,7 +160,7 @@ class ProfilePageState extends State<ProfilePage> {
                                 const SnackBar(content: Text('Logged Out')));
                         goToLogin(context);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.settings,
                         color: Colors.white,
                       ),
@@ -168,7 +171,7 @@ class ProfilePageState extends State<ProfilePage> {
                 // USERNAME SECTION
                 Text(
                   user_info?.username ?? name,
-                  style: TextStyle(color: Colors.white, fontSize: 30),
+                  style: const TextStyle(color: Colors.white, fontSize: 30),
                 ),
 
                 // POSTS, FOLLOWERS, FOLLOWING COUNT STATISTICS SECTION
@@ -178,11 +181,11 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          //"134",
                           user_stats?.followed_count.toString() ?? name,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           "FOLLOWERS",
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
@@ -191,11 +194,11 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          //"14",
                           user_stats?.post_count.toString() ?? name,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           "POSTS",
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
@@ -204,11 +207,11 @@ class ProfilePageState extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          //"3213",
                           user_stats?.following_count.toString() ?? name,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           "FOLLOWING",
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
@@ -225,14 +228,14 @@ class ProfilePageState extends State<ProfilePage> {
                         child: Text(
                       user_info?.biography ?? name,
                       //"he/him\nNYC\n22",
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      style: const TextStyle(color: Colors.white, fontSize: 22),
                     ))
                   ],
                 ),
 
                 // FAVORITES SECTION
                 Row(children: [
-                  Text(
+                  const Text(
                     "Artists ",
                     style: TextStyle(
                         color: Color.fromARGB(255, 205, 231, 237),
@@ -240,14 +243,15 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   Flexible(
                     child: Text(
-                      //"Metalcore : Alternative Metal : Hyperpop",
-                      tag_info.isNotEmpty ? "${tag_info[0].artist_tag_1 ?? ''} : ${tag_info[0].artist_tag_2 ?? ''} : ${tag_info[0].artist_tag_3 ?? ''}": " :  : ",
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      tag_info.isNotEmpty
+                          ? "${tag_info[0].artist_tag_1 ?? ''} : ${tag_info[0].artist_tag_2 ?? ''} : ${tag_info[0].artist_tag_3 ?? ''}"
+                          : " :  : ",
+                      style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
                 ]),
                 Row(children: [
-                  Text(
+                  const Text(
                     "Genres ",
                     style: TextStyle(
                         color: Color.fromARGB(255, 205, 231, 237),
@@ -256,13 +260,15 @@ class ProfilePageState extends State<ProfilePage> {
                   Flexible(
                     child: Text(
                       //"Metalcore : Alternative Metal : Hyperpop",
-                      tag_info.isNotEmpty ? "${tag_info[0].genre_tag_1 ?? ''} : ${tag_info[0].genre_tag_2 ?? ''} : ${tag_info[0].genre_tag_3 ?? ''}": " :  : ",
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      tag_info.isNotEmpty
+                          ? "${tag_info[0].genre_tag_1 ?? ''} : ${tag_info[0].genre_tag_2 ?? ''} : ${tag_info[0].genre_tag_3 ?? ''}"
+                          : " :  : ",
+                      style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
                 ]),
                 Row(children: [
-                  Text(
+                  const Text(
                     "Songs ",
                     style: TextStyle(
                         color: Color.fromARGB(255, 205, 231, 237),
@@ -271,14 +277,16 @@ class ProfilePageState extends State<ProfilePage> {
                   Flexible(
                     child: Text(
                       //"My December",
-                      tag_info.isNotEmpty ? "${tag_info[0].song_tag_1 ?? ''} : ${tag_info[0].song_tag_2 ?? ''} : ${tag_info[0].song_tag_3 ?? ''}": " :  : ",
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      tag_info.isNotEmpty
+                          ? "${tag_info[0].song_tag_1 ?? ''} : ${tag_info[0].song_tag_2 ?? ''} : ${tag_info[0].song_tag_3 ?? ''}"
+                          : " :  : ",
+                      style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   )
                 ]),
 
                 // POSTS SECTION
-                Text(
+                const Text(
                   "POSTS",
                   style: TextStyle(
                       color: Colors.white,

@@ -11,8 +11,8 @@ class HomePage extends StatelessWidget {
         child: Center(
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => ProfilePage()));
             },
             child: const Text('homme'),
           ),

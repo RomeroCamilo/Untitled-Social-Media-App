@@ -28,14 +28,14 @@ void goToNavBarPage(BuildContext context) {
   );
 }
 
-void goToProfile(BuildContext context) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const ProfilePage(),
-    ),
-  );
-}
+// void goToProfile(BuildContext context) {
+//   Navigator.pushReplacement(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => const ProfilePage(),
+//     ),
+//   );
+// }
 
 void goToEditProfile(BuildContext context) {
   Navigator.push(
