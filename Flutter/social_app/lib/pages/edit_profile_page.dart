@@ -26,19 +26,8 @@ class EditProfilePageState extends State<EditProfilePage> {
   static late String user_id;
   User_Info? user_info; // This will store the fetched user data
 
-  /*
-  String favoriteArtist1 = '';
-  String favoriteArtist2 = '';
-  String favoriteArtist3 = '';
-  String favoriteGenre1 = '';
-  String favoriteGenre2 = '';
-  String favoriteGenre3 = '';
-  String favoriteSong1 = '';
-  String favoriteSong2 = '';
-  String favoriteSong3 = '';
-  */
-
-  /* will store updated information */
+  
+  /* will store updated information and pass into cloud functio */
   Tags myTags = Tags(
     user_id: '', // Set this to the actual user ID when available
     artist_tag_1: '',
@@ -51,63 +40,44 @@ class EditProfilePageState extends State<EditProfilePage> {
     genre_tag_3: '',
     song_tag_3: '',
   );
-
+  
   List<Tags> tag_info = []; // This will store the fetched user data
 
   /* init with getting our current user_id */
   @override
   void initState() {
     super.initState();
-    _getUserId();
+    /* store user_id after fetching from firebase */
+    user_id = DatabaseServices.getUserId();
+    setUp();
   }
 
-  // Retrieve the signed-in user's userId
-  void _getUserId() {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+  /* fetching all database values */
+  void setUp() async {
+    User_Info user_data = await DatabaseServices.getUserCloud(user_id);
+    List<Tags> tagsData = await DatabaseServices.getUserTags(user_id);
+    try{
       setState(() {
-        user_id = user.uid;
-        _fetchUser();
-        /* fetch user tags */
-        /* store id into tags for update */
-        myTags.user_id = user_id;
-        _fetchTags();
-      });
-    }
-  }
+        /* store user_id after fetching from firebase */
+        user_id = DatabaseServices.getUserId();
 
-  // Fetch user info for the current user
-  void _fetchUser() async {
-    try {
-      User_Info userData = await DatabaseServices.getUserCloud(user_id);
-      setState(() {
-        user_info = userData; // Store the fetched data in user_info object.
-        username = user_info?.display_name ?? "failed";
+        /* init user fields */
+        user_info = user_data;
+        username = user_info?.username ?? "failed";
+        display_name = user_info?.display_name ?? "failed";
         biography = user_info?.biography ?? "failed";
         private_profile = user_info?.private_profile ?? "failed";
+
+        /* init tags */
+        tag_info = tagsData;
+        myTags.user_id = user_id;
       });
-    } catch (e) {
+    }
+    catch(e){
       print('Failed to fetch user info: $e');
-      setState(() {
-        //name = "could not fetch."; // Ensure setState is called to update the UI
-      });
     }
   }
 
-  // Fetch tags for the current user
-  void _fetchTags() async {
-    try {
-      List<Tags> tagsData = await DatabaseServices.getUserTags(user_id);
-      setState(() {
-        tag_info = tagsData; // Store the fetched data in tags
-      });
-    } catch (e) {
-      print('Failed to fetch tags data: $e');
-      setState(() {
-        //name = "could not fetch."; // Ensure setState is called to update the UI
-      });
-    }
-  }
 
   bool toBoolean(String str) {
     if (str == '1') {

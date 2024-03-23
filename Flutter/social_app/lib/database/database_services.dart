@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'user_info.dart';
 import 'relationship.dart';
 import 'tags.dart';
-import 'package:flutter/foundation.dart'
-    show kDebugMode; // Import kDebugMode from foundation.dart
+import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+   // show kDebugMode; // Import kDebugMode from foundation.dart
 
 class DatabaseServices {
   //url to our cloud function instance.
@@ -250,4 +252,33 @@ class DatabaseServices {
       rethrow;
     }
   }
+
+  // Retrieve the signed-in user's userId
+  static String getUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.uid;
+    }
+    else
+      return '';
+  }
+
+  // Fetch user info for the current user and return that user with its data such as username.
+  static Future<User_Info> fetchUser(String user_id) async {
+    try {
+      User_Info userData = await DatabaseServices.getUserCloud(user_id);
+
+      return userData;
+   
+    } catch (e) {
+      print('Failed to fetch user info: $e');
+      // Rethrow the exception to be handled by the caller
+      throw Exception('Failed to fetch user info');
+    }
+  }
+
+
+
+
+  
 }
