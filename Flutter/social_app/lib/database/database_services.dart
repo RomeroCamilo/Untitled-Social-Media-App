@@ -253,7 +253,7 @@ class DatabaseServices {
     }
   }
 
-  // Retrieve the signed-in user's userId
+  // Retrieve the signed-in user's userId from firebase.
   static String getUserId() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {

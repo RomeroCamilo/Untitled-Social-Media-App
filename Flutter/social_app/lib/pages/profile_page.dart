@@ -26,72 +26,27 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _fetchUser();
-    _fetchCount();
-    _fetchTags();
+    setUp();
   }
 
-  // Retrieve the signed-in user's userId
-  // void _getUserId() {
-  //   User? user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     setState(() {
-  //       user_id = user.uid;
-  //       /* fetch user data */
-  //       _fetchUser();
-  //       /* fetch user follower count */
-  //       _fetchCount();
-  //       /* fetch user tags */
-  //       _fetchTags();
-  //     });
-  //   }
-  // }
+  /* fetching all database values for specific user id. */
+  void setUp() async {
+    User_Info user_data = await DatabaseServices.getUserCloud(widget.uid);
+    List<Tags> tagsData = await DatabaseServices.getUserTags(widget.uid);
+    Relationship userFollowerData = await DatabaseServices.getUserCount(widget.uid);
 
-  // Fetch user info for the current user
-  void _fetchUser() async {
-    try {
-      User_Info userData = await DatabaseServices.getUserCloud(widget.uid);
+    try{
       setState(() {
-        user_info = userData; // Store the fetched data in user_info
-        //name = "called";
-      });
-    } catch (e) {
-      print('Failed to fetch user info data: $e');
-      setState(() {
-        //name = "could not fetch."; // Ensure setState is called to update the UI
+        /* init user fields */
+        user_info = user_data;
+        /* init tags */
+        tag_info = tagsData;
+        /* fetch stats */
+        user_stats = userFollowerData; 
       });
     }
-  }
-
-  // Fetch user follower count for the current user
-  void _fetchCount() async {
-    try {
-      Relationship userFollowerData =
-          await DatabaseServices.getUserCount(widget.uid);
-      setState(() {
-        user_stats = userFollowerData; // Store the fetched data in user_info
-        //name = "called";
-      });
-    } catch (e) {
-      print('Failed to fetch user info count: $e');
-      setState(() {
-        //name = "could not fetch."; // Ensure setState is called to update the UI
-      });
-    }
-  }
-
-  // Fetch tags for the current user
-  void _fetchTags() async {
-    try {
-      List<Tags> tagsData = await DatabaseServices.getUserTags(widget.uid);
-      setState(() {
-        tag_info = tagsData; // Store the fetched data in tags
-      });
-    } catch (e) {
-      print('Failed to fetch tags data: $e');
-      setState(() {
-        //name = "could not fetch."; // Ensure setState is called to update the UI
-      });
+    catch(e){
+      print('Failed to fetch user info: $e');
     }
   }
 
