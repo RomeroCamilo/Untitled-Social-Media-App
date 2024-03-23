@@ -77,10 +77,10 @@ class AuthServices {
     //myTags.user_id = uid;
 
     // Step 3: Trigger Cloud Function to create user in the cloud
-    DatabaseServices.addUserCloud(uid, gEmail, username, displayName, isPrivate,
-        biography, profile_picture_path);
+    await DatabaseServices.addUserCloud(uid, gEmail, username, displayName,
+        isPrivate, biography, profile_picture_path);
 
-    DatabaseServices.createUserTags(uid, myTags);
+    await DatabaseServices.createUserTags(uid, myTags);
 
     // finding a way to retrieve and connect the uid/email to mySQL
     // print(FirebaseAuth.instance.currentUser!.uid); <----- WORKS IN MAIN.DART/ETC.DART AS WELL AS HERE
@@ -129,10 +129,10 @@ class AuthServices {
       );
 
       // Step 3: Trigger Cloud Function to create user in the cloud
-      DatabaseServices.addUserCloud(uid, fEmail, username, displayName,
+      await DatabaseServices.addUserCloud(uid, fEmail, username, displayName,
           isPrivate, biography, profile_picture_path);
 
-      DatabaseServices.createUserTags(uid, myTags);
+      await DatabaseServices.createUserTags(uid, myTags);
 
       await FirebaseAuth.instance.currentUser!.verifyBeforeUpdateEmail(
           email); // Changed this function from updateEmail due to depreciation

@@ -6,7 +6,7 @@ import 'tags.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-   // show kDebugMode; // Import kDebugMode from foundation.dart
+// show kDebugMode; // Import kDebugMode from foundation.dart
 
 class DatabaseServices {
   //url to our cloud function instance.
@@ -258,8 +258,7 @@ class DatabaseServices {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       return user.uid;
-    }
-    else
+    } else
       return '';
   }
 
@@ -269,16 +268,10 @@ class DatabaseServices {
       User_Info userData = await DatabaseServices.getUserCloud(user_id);
 
       return userData;
-   
     } catch (e) {
       print('Failed to fetch user info: $e');
       // Rethrow the exception to be handled by the caller
       throw Exception('Failed to fetch user info');
     }
   }
-
-
-
-
-  
 }

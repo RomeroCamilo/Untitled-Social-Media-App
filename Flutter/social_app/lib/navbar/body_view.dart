@@ -18,7 +18,7 @@ class _NavBarPage extends State<NavBarPage> {
   int currentPageIndex = 0;
   final screens = [
     const HomePage(),
-    const SearchPage(),
+    SearchPage(),
     const NewPostPage(),
     const NotificationPage(),
     ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),

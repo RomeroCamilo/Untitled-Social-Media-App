@@ -26,7 +26,6 @@ class EditProfilePageState extends State<EditProfilePage> {
   static late String user_id;
   User_Info? user_info; // This will store the fetched user data
 
-  
   /* will store updated information and pass into cloud functio */
   Tags myTags = Tags(
     user_id: '', // Set this to the actual user ID when available
@@ -40,7 +39,7 @@ class EditProfilePageState extends State<EditProfilePage> {
     genre_tag_3: '',
     song_tag_3: '',
   );
-  
+
   List<Tags> tag_info = []; // This will store the fetched user data
 
   /* init with getting our current user_id */
@@ -56,7 +55,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   void setUp() async {
     User_Info user_data = await DatabaseServices.getUserCloud(user_id);
     List<Tags> tagsData = await DatabaseServices.getUserTags(user_id);
-    try{
+    try {
       setState(() {
         /* store user_id after fetching from firebase */
         user_id = DatabaseServices.getUserId();
@@ -72,24 +71,13 @@ class EditProfilePageState extends State<EditProfilePage> {
         tag_info = tagsData;
         myTags.user_id = user_id;
       });
-    }
-    catch(e){
+    } catch (e) {
       print('Failed to fetch user info: $e');
     }
   }
 
-
-  bool toBoolean(String str) {
-    if (str == '1') {
-      return true; // If the string is '1', return true
-    }
-    return str.toLowerCase() ==
-        'true'; // Otherwise, return true if the string is 'true', otherwise return false
-  }
-
   @override
   Widget build(BuildContext context) {
-    bool light = false;
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(
