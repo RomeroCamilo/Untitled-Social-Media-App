@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../database/user_info.dart';
 import '../database/database_services.dart';
 import 'package:social_app/pages/other_profile_page.dart';
+import '../pages/profile_page.dart';
 
 // This makes the widget stateful
 class SearchPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('$searchText not found'),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 3),
         ),
       );
       }
@@ -47,15 +48,30 @@ class _SearchPageState extends State<SearchPage> {
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('$username exists!'),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 3),
         ),
       );
 
+      String currentUser_id = DatabaseServices.getUserId();
+
+      /* go to current user profile page */
+      if(currentUser_id == user_id_fetched){
+        /* go to that user page */
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage(uid: currentUser_id,)),
+        );
+      }
+      else{
         /* go to that user page */
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OtherProfilePage(uid: user_id_fetched,)),
         );
+      }
+      
+
+        
 
       }
     } 
@@ -64,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter something to search.'),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 3),
         ),
       );
     }
