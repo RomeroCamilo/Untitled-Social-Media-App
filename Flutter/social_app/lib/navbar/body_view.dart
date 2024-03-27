@@ -22,6 +22,7 @@ class _NavBarPage extends State<NavBarPage> {
     const NewPostPage(),
     const NotificationPage(),
     ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),
+    //other_profile_Page(uid: fetched_data),
   ];
   @override
   Widget build(BuildContext context) {

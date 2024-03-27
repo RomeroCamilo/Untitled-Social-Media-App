@@ -1,19 +1,104 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../database/user_info.dart';
+import '../database/database_services.dart';
+import 'package:social_app/pages/other_profile_page.dart';
 
-class SearchPage extends StatelessWidget {
+// This makes the widget stateful
+class SearchPage extends StatefulWidget {
   SearchPage({super.key});
-  final List<Map<String, dynamic>> searchUsers = [];
-
   @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+
+class _SearchPageState extends State<SearchPage> {
+  final List<Map<String, dynamic>> searchUsers = [];
+  /* store out input */
+  final TextEditingController _textEditingController = TextEditingController();
+
+  User_Info? user_info; // This will store the fetched user data
+  String username = "";
+  String user_id_fetched = "";
+
+
+/* handle event of function clicked */
+ void _handleButtonClick(BuildContext context) async {
+    String searchText = _textEditingController.text;
+
+    /* attempt to search user where is input is not empty */
+    if (searchText.isNotEmpty) {
+
+      /* search for user in database */
+      await searchExist(searchText);
+      
+      /* if no user found */
+      if(username.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$searchText not found'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      }
+      /* if user found */
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$username exists!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+        /* go to that user page */
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OtherProfilePage(uid: user_id_fetched,)),
+        );
+
+      }
+    } 
+    /* if no input at all */
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter something to search.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> searchExist(String user_searching) async {
+    /* populate user_data */
+    User_Info? user_data = await DatabaseServices.searchUserCloud(user_searching);
+    
+    try{
+      setState(() {
+        /* init user fields */
+        user_info = user_data;
+        username = user_info?.username ?? "";
+        user_id_fetched = user_info?.user_id ?? "";
+      });
+    }
+    catch(e){
+      ('Failed to fetch user info: $e');
+    }
+}
+
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: SizedBox(
           height: 40,
+          /* input */
           child: TextField(
+            controller: _textEditingController,
+            /* styling */
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -31,6 +116,20 @@ class SearchPage extends StatelessWidget {
             ),
           ),
         ),
+        /* handle our onPressed */
+        actions: [
+          TextButton(
+
+            onPressed: () => _handleButtonClick(context),
+            child: Text(
+              'Search',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: searchUsers.length,
@@ -44,6 +143,8 @@ class SearchPage extends StatelessWidget {
     );
   }
 }
+
+
 // class SearchPage extends StatefulWidget {
 //   SearchPage({super.key});
 

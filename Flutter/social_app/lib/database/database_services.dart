@@ -119,6 +119,60 @@ class DatabaseServices {
     }
   }
 
+  /* cloud function to search for a user. */
+  static Future<User_Info> searchUserCloud(String username) async {
+
+
+    /* call our http endpoint */
+    try {
+      /* link with a unique user_id */
+      final response = await http.get(
+          Uri.parse('$baseUrl/searchUser/helloHttp?username=$username'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+
+        /* no data found for user scenario, return a */
+        if (response.body.isEmpty) {
+            print('No user found for username: $username');
+
+            /* return a User_Info object with no data. */
+            return User_Info(
+            user_id: '',
+            username: '',
+            display_name: '',
+            email: '',
+            profile_picture_path: '',
+            biography: '',
+            private_profile: '',
+          );
+        }
+
+        /* else we return the fetched data */
+        print('Response from Cloud Function this is the one?: ${response.body}');
+        // Decode the JSON response into a User_Info object
+        final Map<String, dynamic> userMap = json.decode(response.body);
+        return User_Info(
+          user_id: userMap['user_id'] ?? '',
+          username: userMap['username'] ?? '',
+          display_name: userMap['display_name'] ?? '',
+          email: userMap['email'] ?? '',
+          profile_picture_path: userMap['profile_picture_path'] ?? '',
+          biography: userMap['biography'] ?? '',
+          private_profile: userMap['private_profile'] ?? '',
+        );
+      } 
+      else {
+        print('Failed to fetch user. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to fetch user');
+      }
+    } catch (error) {
+      print('Error fetching user info: $error');
+      rethrow;
+    }
+  }
+
   /* cloud function to retrieve user follower and following count */
   static Future<Relationship> getUserCount(String user_id) async {
     /* call our http endpoint */
@@ -184,7 +238,7 @@ class DatabaseServices {
     }
   }
 
-/* put function to update the tags the user is displaying */
+  /* put function to update the tags the user is displaying */
   static Future<void> updateUserTags(String user_id, Tags updatedTags) async {
     try {
       final response = await http.put(
