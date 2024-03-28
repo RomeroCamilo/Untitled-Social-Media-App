@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_app/functions/go_to.dart';
+import 'package:social_app/navbar/body_view.dart';
+import 'package:social_app/navbar/nav_bar.dart';
 import '../database/database_services.dart';
 import '../database/user_info.dart';
 import '../database/relationship.dart';
 import '../database/tags.dart';
-
 
 class OtherProfilePage extends StatefulWidget {
   final String uid;
@@ -18,10 +19,10 @@ class OtherProfilePage extends StatefulWidget {
 class OtherProfilePageState extends State<OtherProfilePage> {
   User_Info? user_info; // This will store the fetched user data
   List<Tags> tag_info = []; // This will store the fetched user data
-  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
+  Relationship?
+      user_stats; // This will store the fetched user data statistics (posts, following, etc)
   String name = "";
-
-  
+  int currentPageIndex = 0;
 
   /* init with getting our current user_id */
   @override
@@ -34,19 +35,19 @@ class OtherProfilePageState extends State<OtherProfilePage> {
   void setUp() async {
     User_Info user_data = await DatabaseServices.getUserCloud(widget.uid);
     List<Tags> tagsData = await DatabaseServices.getUserTags(widget.uid);
-    Relationship userFollowerData = await DatabaseServices.getUserCount(widget.uid);
+    Relationship userFollowerData =
+        await DatabaseServices.getUserCount(widget.uid);
 
-    try{
+    try {
       setState(() {
         /* init user fields */
         user_info = user_data;
         /* init tags */
         tag_info = tagsData;
         /* fetch stats */
-        user_stats = userFollowerData; 
+        user_stats = userFollowerData;
       });
-    }
-    catch(e){
+    } catch (e) {
       print('Failed to fetch user info: $e');
     }
   }
@@ -229,6 +230,13 @@ class OtherProfilePageState extends State<OtherProfilePage> {
           ],
         ),
       ),
+      bottomNavigationBar: NavBar(
+          selectedIndex: currentPageIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          }),
     );
   }
 }

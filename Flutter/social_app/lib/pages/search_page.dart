@@ -13,7 +13,6 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-
 class _SearchPageState extends State<SearchPage> {
   final List<Map<String, dynamic>> searchUsers = [];
   /* store out input */
@@ -23,58 +22,57 @@ class _SearchPageState extends State<SearchPage> {
   String username = "";
   String user_id_fetched = "";
 
-
 /* handle event of function clicked */
- void _handleButtonClick(BuildContext context) async {
+  void _handleButtonClick(BuildContext context) async {
     String searchText = _textEditingController.text;
 
     /* attempt to search user where is input is not empty */
     if (searchText.isNotEmpty) {
-
       /* search for user in database */
       await searchExist(searchText);
-      
+
       /* if no user found */
-      if(username.isEmpty){
+      if (username.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$searchText not found'),
-          duration: Duration(seconds: 3),
-        ),
-      );
+          SnackBar(
+            content: Text('$searchText not found'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
       /* if user found */
-      else{
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$username exists!'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-
-      String currentUser_id = DatabaseServices.getUserId();
-
-      /* go to current user profile page */
-      if(currentUser_id == user_id_fetched){
-        /* go to that user page */
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePage(uid: currentUser_id,)),
+          SnackBar(
+            content: Text('$username exists!'),
+            duration: Duration(seconds: 3),
+          ),
         );
-      }
-      else{
-        /* go to that user page */
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OtherProfilePage(uid: user_id_fetched,)),
-        );
-      }
-      
 
-        
+        String currentUser_id = DatabaseServices.getUserId();
 
+        /* go to current user profile page */
+        if (currentUser_id == user_id_fetched) {
+          /* go to that user page */
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfilePage(
+                      uid: currentUser_id,
+                    )),
+          );
+        } else {
+          /* go to that user page */
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OtherProfilePage(
+                      uid: user_id_fetched,
+                    )),
+          );
+        }
       }
-    } 
+    }
     /* if no input at all */
     else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -88,23 +86,22 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> searchExist(String user_searching) async {
     /* populate user_data */
-    User_Info? user_data = await DatabaseServices.searchUserCloud(user_searching);
-    
-    try{
+    User_Info? user_data =
+        await DatabaseServices.searchUserCloud(user_searching);
+
+    try {
       setState(() {
         /* init user fields */
         user_info = user_data;
         username = user_info?.username ?? "";
         user_id_fetched = user_info?.user_id ?? "";
       });
-    }
-    catch(e){
+    } catch (e) {
       ('Failed to fetch user info: $e');
     }
-}
+  }
 
-
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -135,7 +132,6 @@ class _SearchPageState extends State<SearchPage> {
         /* handle our onPressed */
         actions: [
           TextButton(
-
             onPressed: () => _handleButtonClick(context),
             child: Text(
               'Search',

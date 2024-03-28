@@ -6,7 +6,6 @@ import 'package:social_app/pages/edit_profile_page.dart';
 import 'package:social_app/pages/profile_page.dart';
 import 'package:social_app/pages/other_profile_page.dart';
 
-
 void goToLogin(BuildContext context) {
   Navigator.push(
     context,
@@ -45,5 +44,3 @@ void goToEditProfile(BuildContext context) {
     MaterialPageRoute(builder: (context) => const EditProfilePage()),
   );
 }
-
-
