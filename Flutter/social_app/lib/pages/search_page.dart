@@ -5,6 +5,7 @@ import '../database/user_info.dart';
 import '../database/database_services.dart';
 import 'package:social_app/pages/other_profile_page.dart';
 import '../pages/profile_page.dart';
+import 'package:social_app/navbar/body_view.dart';
 
 // This makes the widget stateful
 class SearchPage extends StatefulWidget {
@@ -53,6 +54,9 @@ class _SearchPageState extends State<SearchPage> {
 
         /* go to current user profile page */
         if (currentUser_id == user_id_fetched) {
+
+        
+
           /* go to that user page */
           Navigator.push(
             context,

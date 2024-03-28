@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_app/functions/go_to.dart';
 import 'package:social_app/navbar/body_view.dart';
-import 'package:social_app/navbar/nav_bar.dart';
+//import 'package:social_app/navbar/nav_bar.dart';
 import '../database/database_services.dart';
 import '../database/user_info.dart';
 import '../database/relationship.dart';
@@ -230,13 +230,6 @@ class OtherProfilePageState extends State<OtherProfilePage> {
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(
-          selectedIndex: currentPageIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          }),
     );
   }
 }

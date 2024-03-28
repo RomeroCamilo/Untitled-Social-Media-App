@@ -15,25 +15,42 @@ class NavBarPage extends StatefulWidget {
 }
 
 class _NavBarPage extends State<NavBarPage> {
-  int currentPageIndex = 0;
+  int currentPageIndex = 4; // Starting with the Profile page
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   final screens = [
     const HomePage(),
     SearchPage(),
     const NewPostPage(),
     const NotificationPage(),
     ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),
-    //other_profile_Page(uid: fetched_data),
   ];
+
+  void updatePageIndex(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[currentPageIndex],
+      body: Navigator(
+        key: navigatorKey,
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => screens[currentPageIndex],
+          );
+        },
+      ),
       bottomNavigationBar: NavBar(
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
+          // Navigate to the screen associated with the NavBar
+          navigatorKey.currentState?.popUntil((route) => route.isFirst);
         },
       ),
     );
