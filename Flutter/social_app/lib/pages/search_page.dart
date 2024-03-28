@@ -55,8 +55,6 @@ class _SearchPageState extends State<SearchPage> {
         /* go to current user profile page */
         if (currentUser_id == user_id_fetched) {
 
-        
-
           /* go to that user page */
           Navigator.push(
             context,
