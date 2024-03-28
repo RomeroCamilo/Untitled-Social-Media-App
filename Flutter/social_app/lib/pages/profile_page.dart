@@ -17,10 +17,9 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   User_Info? user_info; // This will store the fetched user data
   List<Tags> tag_info = []; // This will store the fetched user data
-  Relationship? user_stats; // This will store the fetched user data statistics (posts, following, etc)
+  Relationship?
+      user_stats; // This will store the fetched user data statistics (posts, following, etc)
   String name = "";
-
-  
 
   /* init with getting our current user_id */
   @override
@@ -33,19 +32,19 @@ class ProfilePageState extends State<ProfilePage> {
   void setUp() async {
     User_Info user_data = await DatabaseServices.getUserCloud(widget.uid);
     List<Tags> tagsData = await DatabaseServices.getUserTags(widget.uid);
-    Relationship userFollowerData = await DatabaseServices.getUserCount(widget.uid);
+    Relationship userFollowerData =
+        await DatabaseServices.getUserCount(widget.uid);
 
-    try{
+    try {
       setState(() {
         /* init user fields */
         user_info = user_data;
         /* init tags */
         tag_info = tagsData;
         /* fetch stats */
-        user_stats = userFollowerData; 
+        user_stats = userFollowerData;
       });
-    }
-    catch(e){
+    } catch (e) {
       print('Failed to fetch user info: $e');
     }
   }
@@ -71,13 +70,13 @@ class ProfilePageState extends State<ProfilePage> {
             Column(
               children: [
                 // PROFILE PICTURE SECTION
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
                     radius: 48,
-                    backgroundImage: NetworkImage(
-                        'https://cdn.discordapp.com/attachments/1200217805258231910/1217713074220564492/LP_JASON.jpg?ex=660506ac&is=65f291ac&hm=84efeb4cf21f8feca3c1d3e3d34e167662a04fdce4a24fd0b2831e7f76917fdf&'),
+                    backgroundImage:
+                        NetworkImage('${user_info?.profile_picture_path}'),
                   ),
                 ),
 

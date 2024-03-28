@@ -58,7 +58,8 @@ class AuthServices {
 
     String biography = 'My Bio';
 
-    String profile_picture_path = '';
+    String profile_picture_path =
+        'https://firebasestorage.googleapis.com/v0/b/music-social-media-app-c6815.appspot.com/o/Default_Profile_Picture.jpg?alt=media&token=bca49e78-7922-464d-9a5d-54277816e361';
 
     /* will store updated information */
     Tags myTags = Tags(
@@ -112,7 +113,8 @@ class AuthServices {
 
       String biography = 'My Bio';
 
-      String profile_picture_path = '';
+      String profile_picture_path =
+          'https://firebasestorage.googleapis.com/v0/b/music-social-media-app-c6815.appspot.com/o/Default_Profile_Picture.jpg?alt=media&token=bca49e78-7922-464d-9a5d-54277816e361';
 
       /* will store updated information */
       Tags myTags = Tags(

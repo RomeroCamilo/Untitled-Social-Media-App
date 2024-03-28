@@ -1,4 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:social_app/navbar/body_view.dart';
 import 'package:social_app/pages/profile_page.dart';
@@ -76,6 +80,68 @@ class EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.media);
+    if (result == null) {
+      return;
+    }
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future uploadFile() async {
+    final path = 'profile_picture/$user_id';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    print("Uploaded: $urlDownload");
+
+    setState(() {
+      uploadTask = null;
+    });
+  }
+
+  // Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+  //       stream: uploadTask?.snapshotEvents,
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           final data = snapshot.data!;
+  //           double progress = data.bytesTransferred / data.totalBytes;
+
+  //           return SizedBox(
+  //             height: 50,
+  //             child: Stack(
+  //               fit: StackFit.expand,
+  //               children: [
+  //                 LinearProgressIndicator(
+  //                   value: progress,
+  //                   backgroundColor: Colors.grey,
+  //                   color: Colors.green,
+  //                 ),
+  //                 Center(
+  //                     child: Text(
+  //                   '${(100 * progress).roundToDouble()}%',
+  //                   style: const TextStyle(color: Colors.white),
+  //                 ))
+  //               ],
+  //             ),
+  //           );
+  //         } else {
+  //           return const SizedBox(height: 50);
+  //         }
+  //       },
+  //     );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +178,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             ),
 
             //This helps off center the profile picture to both be partially in the box & out of it
-            const Align(
+            Align(
                 alignment: Alignment.topCenter,
                 child: SizedBox(
                   child: CircleAvatar(
@@ -120,8 +186,8 @@ class EditProfilePageState extends State<EditProfilePage> {
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 48.0,
-                      backgroundImage: NetworkImage(
-                          'https://cdn.discordapp.com/attachments/1200217805258231910/1217713074220564492/LP_JASON.jpg?ex=660506ac&is=65f291ac&hm=84efeb4cf21f8feca3c1d3e3d34e167662a04fdce4a24fd0b2831e7f76917fdf&'),
+                      backgroundImage:
+                          NetworkImage('${user_info?.profile_picture_path}'),
                     ),
                   ),
                 )),
@@ -141,7 +207,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                     ),
                     // Add Cloud Function To Edit/Store User Selected Picture/Image
                     onPressed: () {
-                      null;
+                      selectFile();
                     },
                     child: const Text('Upload Picture',
                         style: TextStyle(
@@ -446,13 +512,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                                         private_profile);
                                     DatabaseServices.updateUserTags(
                                         user_id, myTags);
-                                    Navigator.pop(context);
+                                    uploadFile();
+                                    // Navigator.pop(context);
                                   }
                                 },
                                 child: const Text('UPDATE INFORMATION',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold))),
+                            // buildProgress(),
                           ],
                         ),
                       )
